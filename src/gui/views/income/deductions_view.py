@@ -15,17 +15,37 @@ class DeductionsSchedule:
     @staticmethod
     def create_frame(parent, fv, validation_refs=None):
         f = ctk.CTkFrame(parent, fg_color="transparent")
-        page_header(f, "DEDUCTIONS & EXEMPTIONS", "Chapter VI-A  |  AY 2026-27", accent_color=Theme.TTI_PURPLE)
-        
+        page_header(
+            f,
+            "DEDUCTIONS & EXEMPTIONS",
+            "Chapter VI-A  |  AY 2026-27",
+            accent_color=Theme.TTI_PURPLE,
+        )
+
         opt = make_card(f, "SECTION 80C OPTIMIZER", accent_color=Theme.TTI_PURPLE)
         try:
             val_80c = float(fv.get("ded_80c", ctk.StringVar(value="0")).get() or 0)
             limit = 150000
             remaining = max(0, limit - val_80c)
             p_val = min(1.0, val_80c / limit)
-            status = f"Invested: ₹{int(val_80c):,}  |  Remaining Limit: ₹{int(remaining):,}" if remaining > 0 else "✓ Maximum Limit of ₹1,50,000 Reached"
-            ctk.CTkLabel(opt, text=status, font=Theme.BODY_BOLD, text_color=Theme.SUCCESS_GREEN if remaining == 0 else Theme.TAX_AMBER).pack(pady=SPACING_SM)
-            pb = ctk.CTkProgressBar(opt, width=400, height=8, fg_color=Theme.BG_INPUT, progress_color=Theme.TTI_PURPLE)
+            status = (
+                f"Invested: ₹{int(val_80c):,}  |  Remaining Limit: ₹{int(remaining):,}"
+                if remaining > 0
+                else "✓ Maximum Limit of ₹1,50,000 Reached"
+            )
+            ctk.CTkLabel(
+                opt,
+                text=status,
+                font=Theme.BODY_BOLD,
+                text_color=Theme.SUCCESS_GREEN if remaining == 0 else Theme.TAX_AMBER,
+            ).pack(pady=SPACING_SM)
+            pb = ctk.CTkProgressBar(
+                opt,
+                width=400,
+                height=8,
+                fg_color=Theme.BG_INPUT,
+                progress_color=Theme.TTI_PURPLE,
+            )
             pb.set(p_val)
             pb.pack(pady=(0, SPACING_MD))
         except Exception:

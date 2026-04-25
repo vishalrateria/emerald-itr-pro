@@ -2,6 +2,7 @@ import os
 import webbrowser
 from datetime import datetime
 
+
 class ReportService:
     @staticmethod
     def generate_computation_report(client_data, tax_data, output_path):

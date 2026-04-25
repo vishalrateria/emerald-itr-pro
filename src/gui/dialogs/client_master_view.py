@@ -17,6 +17,7 @@ from src.gui.styles.constants import (
     DIVIDER_HEIGHT,
 )
 
+
 class ClientMaster:
     def __init__(self, parent, on_switch_callback, on_save_switch_callback):
         self.parent = parent
@@ -31,7 +32,8 @@ class ClientMaster:
         }
         self.search_var = ctk.StringVar(value="")
         self._search_trace_token = self.search_var.trace_add(
-            "write", lambda *_: self.refresh_client_list())
+            "write", lambda *_: self.refresh_client_list()
+        )
 
     def add_client(self, client_id, name, pan, relation="Self"):
         self.clients[client_id] = {
@@ -98,7 +100,7 @@ class ClientMaster:
             font=Theme.H3,
             text_color=Theme.SUCCESS_GREEN,
             justify="center",
-            anchor="center"
+            anchor="center",
         ).pack(pady=(SPACING_MD, SPACING_XS))
         ctk.CTkLabel(
             hdr,
@@ -115,8 +117,12 @@ class ClientMaster:
             text_color=Theme.TEXT_DIM,
             anchor="w",
         ).pack(fill="x", padx=SPACING_SM, pady=(SPACING_XS, 0))
-        sf = ctk.CTkFrame(sidebar, fg_color=Theme.BG_INPUT,
-                          height=ENTRY_HEIGHT, corner_radius=RADIUS_MD)
+        sf = ctk.CTkFrame(
+            sidebar,
+            fg_color=Theme.BG_INPUT,
+            height=ENTRY_HEIGHT,
+            corner_radius=RADIUS_MD,
+        )
         sf.pack(fill="x", padx=SPACING_SM, pady=(0, SPACING_SM))
         ctk.CTkEntry(
             sf,
@@ -126,10 +132,14 @@ class ClientMaster:
             justify="left",
             fg_color="transparent",
             border_width=0,
-            height=ENTRY_HEIGHT
+            height=ENTRY_HEIGHT,
         ).pack(fill="x", padx=SPACING_XS)
-        clf = ctk.CTkScrollableFrame(sidebar, fg_color="transparent",
-                                     scrollbar_button_color=Theme.SECTION_BORDER, scrollbar_button_hover_color=Theme.ACCENT_PRIMARY)
+        clf = ctk.CTkScrollableFrame(
+            sidebar,
+            fg_color="transparent",
+            scrollbar_button_color=Theme.SECTION_BORDER,
+            scrollbar_button_hover_color=Theme.ACCENT_PRIMARY,
+        )
         clf.pack(fill="both", expand=True, padx=SPACING_SM, pady=(0, SPACING_XS))
         master.client_list_frame = clf
         btn_row = ctk.CTkFrame(sidebar, fg_color="transparent")
@@ -167,7 +177,7 @@ class ClientMaster:
                 font=Theme.CAPTION,
                 text_color=Theme.TEXT_DIM,
                 justify="center",
-                anchor="center"
+                anchor="center",
             ).pack(pady=SPACING_LG)
             return
         name_wrap = max(80, CLIENT_SIDEBAR_WIDTH - 36)
@@ -181,12 +191,18 @@ class ClientMaster:
                 fg_color=(Theme.BG_INPUT if is_active else Theme.BG_SECONDARY),
                 corner_radius=RADIUS_MD,
                 border_width=1,
-                border_color=(Theme.ACCENT_PRIMARY if is_active else Theme.SECTION_BORDER),
+                border_color=(
+                    Theme.ACCENT_PRIMARY if is_active else Theme.SECTION_BORDER
+                ),
             )
             card.pack(fill="x", pady=(0, SPACING_XS))
             if is_active:
                 indicator = ctk.CTkFrame(
-                    card, width=DIVIDER_HEIGHT, fg_color=Theme.ACCENT_PRIMARY, corner_radius=2)
+                    card,
+                    width=DIVIDER_HEIGHT,
+                    fg_color=Theme.ACCENT_PRIMARY,
+                    corner_radius=2,
+                )
                 indicator.place(relx=0, rely=0.1, relheight=0.8, x=2)
             info = ctk.CTkFrame(card, fg_color="transparent")
             info.pack(fill="x", padx=SPACING_SM, pady=(SPACING_SM, SPACING_XS))
@@ -236,8 +252,12 @@ class ClientMaster:
                     **Theme.get_button_style("ghost"),
                 ).grid(row=0, column=1, padx=(SPACING_XS, 0), sticky="ew")
             else:
-                ctk.CTkLabel(af, text="CURRENT ACTIVE PROFILE", font=Theme.CAPTION,
-                             text_color=Theme.ACCENT_PRIMARY).pack(fill="x")
+                ctk.CTkLabel(
+                    af,
+                    text="CURRENT ACTIVE PROFILE",
+                    font=Theme.CAPTION,
+                    text_color=Theme.ACCENT_PRIMARY,
+                ).pack(fill="x")
 
     def _handle_remove(self, cid):
         name = self.clients[cid]["name"]
@@ -250,6 +270,7 @@ class ClientMaster:
     def show_manager_dialog(self):
         from tkinter import filedialog, messagebox
         import json
+
         path = filedialog.askopenfilename(
             title="Open Client Database",
             filetypes=[("Database", "*.mcdb"), ("All Files", "*.*")],
@@ -265,8 +286,10 @@ class ClientMaster:
             self.clients = data["clients"]
             self.current_client_id = data.get("current_client_pan", "")
             self.refresh_client_list()
-            messagebox.showinfo("Database Loaded",
-                                f"Loaded {len(self.clients)} client(s) from database.")
+            messagebox.showinfo(
+                "Database Loaded",
+                f"Loaded {len(self.clients)} client(s) from database.",
+            )
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load database: {e}")
 
@@ -334,6 +357,7 @@ class ClientMaster:
             font=Theme.BODY,
             **Theme.get_combo_style(),
         ).pack(fill="x", padx=SPACING_MD, pady=(0, SPACING_MD))
+
         def on_add():
             n = master.new_client_vars["name"].get().strip()
             p = master.new_client_vars["pan"].get().strip().upper()
@@ -360,6 +384,7 @@ class ClientMaster:
             for v in master.new_client_vars.values():
                 v.set("")
             d.destroy()
+
         bf = ctk.CTkFrame(content, fg_color="transparent")
         bf.pack(fill="x", pady=SPACING_MD)
         bf.grid_columnconfigure(0, weight=1)

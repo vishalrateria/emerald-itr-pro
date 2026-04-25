@@ -72,10 +72,13 @@ scripts/
 tests/
 models/
 tools/
-docs/
+assets/
 
 # OS
 .DS_Store
 Thumbs.db
 *.log
+
+# Backups and Temporary folders
+temp_folder/
 

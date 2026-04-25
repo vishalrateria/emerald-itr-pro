@@ -24,4 +24,8 @@ def validate_mobile(mobile: str) -> bool:
 
 
 def validate_email(email: str) -> bool:
-    return bool(re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email)) if email else False
+    return (
+        bool(re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email))
+        if email
+        else False
+    )

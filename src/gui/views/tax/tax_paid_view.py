@@ -1,6 +1,4 @@
-from src.config import (
-    MAX_ENTRIES_TDS, MAX_ENTRIES_TCS, MAX_ENTRIES_TAX_PAID
-)
+from src.config import MAX_ENTRIES_TDS, MAX_ENTRIES_TCS, MAX_ENTRIES_TAX_PAID
 from src.gui.styles.constants import (
     SPACING_MD,
 )
@@ -29,10 +27,15 @@ class TaxPaidSchedule:
             f,
             "TAXES PAID",
             "TDS / TCS / Advance Tax / Self-Assessment Tax",
-            accent_color=Theme.SUCCESS_GREEN
+            accent_color=Theme.SUCCESS_GREEN,
         )
-        
-        tds_card = make_card(f, "TDS — Tax Deducted at Source", pady_bottom=2, accent_color=Theme.SUCCESS_GREEN)
+
+        tds_card = make_card(
+            f,
+            "TDS — Tax Deducted at Source",
+            pady_bottom=2,
+            accent_color=Theme.SUCCESS_GREEN,
+        )
         table_header_frame(
             tds_card,
             [
@@ -50,7 +53,11 @@ class TaxPaidSchedule:
                 i,
                 [
                     {"textvariable": fv[f"tds_{i}_tan"], "key": f"tds_{i}_tan"},
-                    {"textvariable": fv[f"tds_{i}_name"], "key": f"tds_{i}_name", "weight": 2},
+                    {
+                        "textvariable": fv[f"tds_{i}_name"],
+                        "key": f"tds_{i}_name",
+                        "weight": 2,
+                    },
                     {"textvariable": fv[f"tds_{i}_section"], "key": f"tds_{i}_section"},
                     {"textvariable": fv[f"tds_{i}_cert"], "key": f"tds_{i}_cert"},
                     {"textvariable": fv[f"tds_{i}_date"], "key": f"tds_{i}_date"},
@@ -58,9 +65,14 @@ class TaxPaidSchedule:
                 ],
                 validation_refs=validation_refs,
             )
-            
+
         ctk.CTkFrame(f, height=SPACING_MD, fg_color="transparent").pack()
-        tcs_card = make_card(f, "TCS — Tax Collected at Source", pady_bottom=2, accent_color=Theme.SUCCESS_GREEN)
+        tcs_card = make_card(
+            f,
+            "TCS — Tax Collected at Source",
+            pady_bottom=2,
+            accent_color=Theme.SUCCESS_GREEN,
+        )
         table_header_frame(
             tcs_card,
             [
@@ -77,16 +89,25 @@ class TaxPaidSchedule:
                 i,
                 [
                     {"textvariable": fv[f"tcs_{i}_tan"], "key": f"tcs_{i}_tan"},
-                    {"textvariable": fv[f"tcs_{i}_name"], "key": f"tcs_{i}_name", "weight": 2},
+                    {
+                        "textvariable": fv[f"tcs_{i}_name"],
+                        "key": f"tcs_{i}_name",
+                        "weight": 2,
+                    },
                     {"textvariable": fv[f"tcs_{i}_section"], "key": f"tcs_{i}_section"},
                     {"textvariable": fv[f"tcs_{i}_date"], "key": f"tcs_{i}_date"},
                     {"textvariable": fv[f"tcs_{i}_amount"], "key": f"tcs_{i}_amount"},
                 ],
                 validation_refs=validation_refs,
             )
-            
+
         ctk.CTkFrame(f, height=SPACING_MD, fg_color="transparent").pack()
-        tax_card = make_card(f, "ADVANCE TAX / SELF-ASSESSMENT", pady_bottom=2, accent_color=Theme.SUCCESS_GREEN)
+        tax_card = make_card(
+            f,
+            "ADVANCE TAX / SELF-ASSESSMENT",
+            pady_bottom=2,
+            accent_color=Theme.SUCCESS_GREEN,
+        )
         table_header_frame(
             tax_card,
             [
@@ -113,5 +134,5 @@ class TaxPaidSchedule:
                 ],
                 validation_refs=validation_refs,
             )
-            
+
         return f

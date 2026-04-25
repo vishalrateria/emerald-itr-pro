@@ -1,4 +1,10 @@
-from src.gui.styles.constants import SPACING_SM, SPACING_MD, CARD_PADX, INNER_PADX, ENTRY_HEIGHT
+from src.gui.styles.constants import (
+    SPACING_SM,
+    SPACING_MD,
+    CARD_PADX,
+    INNER_PADX,
+    ENTRY_HEIGHT,
+)
 import customtkinter as ctk
 from src.services.logging_service import log as logger
 from src.gui.styles.theme import Theme
@@ -25,13 +31,14 @@ class TrialBalanceSchedule:
         di = make_card(f, "DIRECT INCOMES", title_color=Theme.SUCCESS_GREEN)
 
         from src.services.io.import_service import ImportService
+
         ctk.CTkButton(
             di,
             text="📈 IMPORT FROM EXCEL / CSV",
             command=lambda: ImportService.import_trial_balance(fv),
             height=ENTRY_HEIGHT,
             font=Theme.BODY_BOLD,
-            **Theme.get_button_style("primary")
+            **Theme.get_button_style("primary"),
         ).pack(fill="x", padx=INNER_PADX, pady=(SPACING_SM, 15))
 
         field_row(di, "Sales / Turnover", g("tb_sales"))
@@ -61,17 +68,21 @@ class TrialBalanceSchedule:
             textvariable=g("tb_total_dr"),
             font=Theme.H2,
             text_color=Theme.ERROR_RED,
-            anchor="center"
+            anchor="center",
         )
-        sl["tb_total_dr"].grid(row=0, column=0, sticky="e", padx=CARD_PADX, pady=SPACING_MD)
+        sl["tb_total_dr"].grid(
+            row=0, column=0, sticky="e", padx=CARD_PADX, pady=SPACING_MD
+        )
         sl["tb_total_cr"] = ctk.CTkLabel(
             sm,
             textvariable=g("tb_total_cr"),
             font=Theme.H2,
             text_color=Theme.SUCCESS_GREEN,
-            anchor="center"
+            anchor="center",
         )
-        sl["tb_total_cr"].grid(row=0, column=1, sticky="e", padx=CARD_PADX, pady=SPACING_MD)
+        sl["tb_total_cr"].grid(
+            row=0, column=1, sticky="e", padx=CARD_PADX, pady=SPACING_MD
+        )
 
         def up(*_):
             try:
@@ -96,24 +107,30 @@ class TrialBalanceSchedule:
             text="BALANCED",
             font=Theme.H2,
             text_color=Theme.SUCCESS_GREEN,
-            anchor="center"
+            anchor="center",
         )
-        sl["tb_status"].grid(row=0, column=2, sticky="e", padx=CARD_PADX, pady=SPACING_MD)
+        sl["tb_status"].grid(
+            row=0, column=2, sticky="e", padx=CARD_PADX, pady=SPACING_MD
+        )
         ctk.CTkLabel(
             sm,
             text="TOTAL DEBIT",
             font=Theme.CAPTION,
             text_color=Theme.TEXT_DIM,
-            anchor="center"
+            anchor="center",
         ).grid(row=1, column=0, sticky="w", pady=(0, SPACING_SM))
         ctk.CTkLabel(
             sm,
             text="TOTAL CREDIT",
             font=Theme.CAPTION,
             text_color=Theme.TEXT_DIM,
-            anchor="center"
+            anchor="center",
         ).grid(row=1, column=1, sticky="w", pady=(0, SPACING_SM))
         ctk.CTkLabel(
-            sm, text="STATUS", font=Theme.CAPTION, text_color=Theme.TEXT_DIM, anchor="center"
+            sm,
+            text="STATUS",
+            font=Theme.CAPTION,
+            text_color=Theme.TEXT_DIM,
+            anchor="center",
         ).grid(row=1, column=2, sticky="w", pady=(0, SPACING_SM))
         return f

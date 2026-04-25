@@ -1,6 +1,4 @@
-from src.config import (
-    MAX_ENTRIES_HP
-)
+from src.config import MAX_ENTRIES_HP
 from src.gui.styles.constants import (
     SPACING_MD,
 )
@@ -14,12 +12,11 @@ from src.gui.widgets.common import (
     table_data_row,
 )
 
+
 class HousePropertySchedule:
     @staticmethod
     def create_frame(
-        parent: ctk.CTkFrame,
-        fv: dict,
-        validation_refs: dict = None
+        parent: ctk.CTkFrame, fv: dict, validation_refs: dict = None
     ) -> ctk.CTkFrame:
         f = ctk.CTkFrame(parent, fg_color="transparent")
         page_header(

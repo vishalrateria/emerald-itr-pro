@@ -1,0 +1,94 @@
+MASTER ITR JSON ARCHITECTURE & VALIDATION SPECIFICATION (VERSION 1.1)
+Financial Year: 2025-26 (Assessment Year 2026-27)
+Target Forms: ITR-1, ITR-2, ITR-3, ITR-4, ITR-U
+Default Regime: New Tax Regime (Section 115BAC)
+Purpose: Anchor specification for engineering, QA, legal, and product teams.
+
+------------------------------------------------------------
+SECTION A: OVERVIEW & PRINCIPLES
+------------------------------------------------------------
+- Provide a single authoritative spec for JSON payloads, validation rules, rule metadata, audit trails, admin gating, and test artifacts.
+- Design principles:
+  * Data-driven rules stored in a versioned repository with `legalReference`.
+  * Date-aware engine applies rules based on transaction `SaleDate`/`PurchaseDate` and rule `effectiveDate`.
+  * Traceability: every validation decision stores `ruleId`, `legalReference`, `version`, and `actor`.
+  * Gating: non-explicit statutory changes require `legalReference` and admin sign-off.
+  * Offline-first validation using datasets (RBI IFSC, AMC disclosures, Form 26AS/AIS).
+
+------------------------------------------------------------
+SECTION B: DATA MODEL & REQUIRED NODES
+------------------------------------------------------------
+- Envelope: { "metadata": {...}, "taxpayer": {...}, "schedules": {...}, "audit": {...} }
+- metadata: schemaVersion, payloadId, generatedAt, source.
+- taxpayer: PAN, AadhaarPanLinkStatus (Linked|NotLinked|Pending|Invalid|Exempt), Name, DOB, ResidentStatus, Opting115BAC, PrimaryMobile, SecondaryMobile, PrimaryEmail, SecondaryEmail, PrimaryAddress, SecondaryAddress, RefundCreditFlag, PrimaryBankAccount.
+- schedules: Sch_TDS, Sch_TCS, Sch_CG, Sch_VDA, Sch_BP, Sch_OS, Sch_FA, Sch_AL, Sch_80G, Sch_80GGC, DebtMFClassification.
+- audit: ingestionSource, ingestedBy, ingestedAt, validationRunId.
+
+------------------------------------------------------------
+SECTION C: DETAILED VALIDATION RULES & LOGIC
+------------------------------------------------------------
+- Rule storage model: { ruleId, ruleName, description, ruleType, parameters, allowedValues, legalReference, effectiveDate, version, enabled }
+- Global serialization: omit empty arrays/nodes; reject nulls; trim strings; uppercase identifiers.
+- Identifier normalization: PAN/TAN/GSTIN/IFSC/BSR/TransactionID uppercase; regex validation.
+- Aadhaar-PAN linkage (Strict Enum): Linked|NotLinked|Pending|Invalid|Exempt.
+- Regime enforcement & Standard Deductions (New Regime):
+  * If Opting115BAC == true: allow D_STD_SALARY (₹75,000) and D_STD_PENSION (₹25,000); allow 80CCD(2) (14% for ALL employees).
+  * Tax Slabs: 0-4L (0%), 4-8L (5%), 8-12L (10%), 12-16L (15%), 16-20L (20%), 20-24L (25%), >24L (30%).
+- ITR Form Eligibility (AY 2026-27 Updates):
+  * ITR-1 (Sahaj): Up to TWO (2) House Properties; LTCG u/s 112A (up to ₹1.25L) reporting supported.
+  * ITR-4 (Sugam): Up to TWO (2) House Properties; LTCG u/s 112A (up to ₹1.25L) reporting supported.
+- Regime Gating (Form 10-IEA):
+  * If Opting115BAC == false AND (ITR-3 OR ITR-4): Mandatory node `Form10IEA_AckNo` and `DateOfFiling`.
+- Business & Presumptive Taxation (Sch_BP):
+  * Mandatory field: `CashTransactionSlab` (Values: "<= 5%", "> 5%").
+  * Eligibility check: If `CashTransactionSlab` == "> 5%":
+    - Section 44AD turnover limit restricted to ₹2 Crore (not ₹3 Cr).
+    - Section 44ADA receipts limit restricted to ₹50 Lakh (not ₹75 L).
+  * ITR-4 Mandatory: `BankBalance_AsOf_31Mar2026`.
+- Virtual Digital Assets (Sch_VDA): Flat 30% tax u/s 115BBH.
+- Online Gaming Winnings (Section 115BBJ / Rule 133):
+  * Net Winnings Calculation: `A - (B + C)` where A=Total Winnings, B=Total Deposits, C=Opening Balance.
+  * Flat 30% tax on Net Winnings; No basic exemption; No 87A rebate.
+- Schedule Other Sources (Sch_OS):
+  * Dividend Income: Must be reported in 5-bucket quarterly array (Jun15, Sep15, Dec15, Mar15, Mar31) for Section 234C interest deferment calculation.
+- Capital Gains (AY 2026-27 Rules):
+  * Listed Equity/Mutual Funds: STCG is 20%. LTCG is 12.5% with a ₹1,25,000 exemption limit.
+  * Real Estate Transitional Relief: Property acquired BEFORE 23-July-2024: LOWER of 12.5% (no indexation) or 20% (with indexation).
+- Donation Disclosures (Sch_80G / 80GGC):
+  * 80G: Requires Bank_IFSC and Transaction_Reference_No.
+  * 80GGC: Requires Political_Party_Name and Political_Party_PAN.
+- TDS/TCS Thresholds (Proactive Warnings):
+  * Rental Warning: declared Gross Rent >= ₹6,00,000.
+  * Senior Interest Warning: declared Interest >= ₹1,00,000.
+- Section 87A Rebate & Marginal Relief (New Tax Regime):
+  * Eligibility: Resident; Total Taxable Income (TTI) <= ₹12,00,000. Rebate max ₹60,000.
+  * Marginal relief applies for incomes slightly above ₹12 Lakh.
+  * Restriction: 87A Rebate NOT allowed against Section 111A and 112A capital gains.
+- Advance Tax Exemption (Section 207):
+  * Senior citizen (60+) with zero PGBP income → Force 234B/C to zero.
+- Section 234F Late Filing Fee:
+  * July 31 deadline. TTI > 5L → ₹5,000; TTI <= 5L → ₹1,000; TTI < 4L → ₹0.
+- Section 234I Revised Return Fee (NEW):
+  * Applies to revised returns filed between 31-Dec-2026 and 31-Mar-2027.
+  * If RevisedReturn == true AND FilingDate > 31-Dec-2026: Apply ₹1,000 fee (if TTI <= 5L) or ₹5,000 fee (if TTI > 5L).
+
+------------------------------------------------------------
+SECTION D: JSON SCHEMA FRAGMENTS
+------------------------------------------------------------
+- Sch_BP: { "GrossReceiptsDigital": int, "BankBalance_AsOf_31Mar": int, "CashTransactionSlab": enum }
+- Sch_OS: { "DividendIncome_Buckets": [int, int, int, int, int], "OnlineGamingNetWinnings": int }
+- Sch_80G: { "IFSC": str, "TransactionRef": str, "DonationAmt": int }
+
+------------------------------------------------------------
+SECTION F: TEST CASES & QA SUITE
+------------------------------------------------------------
+- UT10: Section 44AD/44ADA threshold downgrade if cash > 5%.
+- UT11: Online gaming winnings tax application u/s 115BBJ.
+- UT12: Dividend quarterly bucket sum mismatch with total income.
+- UT13: Section 234I fee calculation logic for revised filings between Dec 31 and Mar 31.
+- UT14: Section 87A Rebate application correctly capped at ₹60k for TTI up to ₹12L.
+
+------------------------------------------------------------
+SECTION K: APPENDIX
+------------------------------------------------------------
+- Common ruleIds: R_VDA_FLAT30, R_112A_LIMIT_125K, R_PRESUMPTIVE_MIN_MARGIN, R_234I_REVISED_FEE, R_LTCG_TRANSITION, R_ITR1_HP_LIMIT_2, R_115BBJ_GAMING_30, R_DIV_BUCKETS_SYNC, R_PRESUMPTIVE_CASH_LIMIT, R_SEC207_ADVANCE_TAX_EXEMPT, R_234F_LATE_FEE, R_87A_REBATE_12L.

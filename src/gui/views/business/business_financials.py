@@ -272,9 +272,13 @@ class BusinessFinancialsSchedule:
         ctk.CTkFrame(f, height=SPACING_MD, fg_color="transparent").pack()
         itr4_card = make_card(f, "ITR-4 MANDATORY DISCLOSURES (For AY 2026-27)")
         field_row(
-            itr4_card, "Total Investment in Assets (Closing)", fv.get("itr4_investments")
+            itr4_card,
+            "Total Investment in Assets (Closing)",
+            fv.get("itr4_investments"),
         )
-        field_row(itr4_card, "Total Bank Balance (Closing)", fv.get("itr4_bank_balance"))
+        field_row(
+            itr4_card, "Total Bank Balance (Closing)", fv.get("itr4_bank_balance")
+        )
         ctk.CTkFrame(f, height=SPACING_MD, fg_color="transparent").pack()
         ctk.CTkFrame(f, height=SPACING_MD, fg_color="transparent").pack()
         msme_card = make_card(f, "STATUTORY DISALLOWANCES (Section 43B & MSMED Act)")
@@ -303,13 +307,13 @@ class BusinessFinancialsSchedule:
             text="TOTAL BUSINESS INCOME",
             font=Theme.H2,
             text_color=Theme.SUCCESS_GREEN,
-            anchor="w"
+            anchor="w",
         ).pack(side="left", padx=CARD_PADX, pady=SPACING_MD)
         ctk.CTkLabel(
             sm,
             textvariable=g("bp_total"),
             font=Theme.H1,
             text_color=Theme.SUCCESS_GREEN,
-            anchor="e"
+            anchor="e",
         ).pack(side="right", padx=CARD_PADX, pady=SPACING_MD)
         return f

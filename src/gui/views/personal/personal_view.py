@@ -9,23 +9,25 @@ from src.gui.widgets.common import (
     combo_field_row,
 )
 
+
 class PersonalSchedule:
     @staticmethod
     def create_frame(
         parent: ctk.CTkFrame,
         form_vars: dict,
         dynamic_refs: dict = None,
-        validation_refs: dict = None
+        validation_refs: dict = None,
     ) -> ctk.CTkFrame:
         f = ctk.CTkFrame(parent, fg_color="transparent")
         page_header(
             f,
             "PERSONAL IDENTITY & FILING STATUS",
             "Assessee details — AY 2026-27",
-            accent_color=Theme.BRAND_BLUE
+            accent_color=Theme.BRAND_BLUE,
         )
         id_card = make_card(f, "IDENTITY", accent_color=Theme.BRAND_BLUE)
         from src.services.io.import_service import ImportService
+
         import_row = ctk.CTkFrame(id_card, fg_color="transparent")
         import_row.pack(fill="x", padx=INNER_PADX, pady=(SPACING_SM, SPACING_SM))
         ctk.CTkButton(
@@ -34,7 +36,7 @@ class PersonalSchedule:
             command=lambda: ImportService.import_prefill(form_vars),
             height=BUTTON_HEIGHT,
             font=Theme.BODY_BOLD,
-            **Theme.get_button_style("primary")
+            **Theme.get_button_style("primary"),
         ).pack(side="left", padx=SPACING_SM)
         ctk.CTkButton(
             import_row,
@@ -42,7 +44,7 @@ class PersonalSchedule:
             command=lambda: ImportService.import_ais_json(form_vars),
             height=BUTTON_HEIGHT,
             font=Theme.BODY_BOLD,
-            **Theme.get_button_style("primary")
+            **Theme.get_button_style("primary"),
         ).pack(side="left", padx=SPACING_SM)
         ctk.CTkButton(
             import_row,
@@ -50,7 +52,7 @@ class PersonalSchedule:
             command=lambda: _handle_form16_import(parent, form_vars),
             height=BUTTON_HEIGHT,
             font=Theme.BODY_BOLD,
-            **Theme.get_button_style("primary")
+            **Theme.get_button_style("primary"),
         ).pack(side="left", padx=SPACING_SM)
         ctk.CTkButton(
             import_row,
@@ -58,7 +60,7 @@ class PersonalSchedule:
             command=lambda: _handle_form26as_import(parent, form_vars),
             height=BUTTON_HEIGHT,
             font=Theme.BODY_BOLD,
-            **Theme.get_button_style("secondary")
+            **Theme.get_button_style("secondary"),
         ).pack(side="left", padx=SPACING_SM)
         ctk.CTkButton(
             import_row,
@@ -66,7 +68,7 @@ class PersonalSchedule:
             command=lambda: _handle_ais_ai_import(parent, form_vars),
             height=BUTTON_HEIGHT,
             font=Theme.BODY_BOLD,
-            **Theme.get_button_style("secondary")
+            **Theme.get_button_style("secondary"),
         ).pack(side="left", padx=SPACING_SM)
         ctk.CTkButton(
             import_row,
@@ -74,7 +76,7 @@ class PersonalSchedule:
             command=lambda: _handle_tax_advisory(parent, form_vars),
             height=BUTTON_HEIGHT,
             font=Theme.BODY_BOLD,
-            **Theme.get_button_style("accent")
+            **Theme.get_button_style("accent"),
         ).pack(side="left", padx=SPACING_SM)
         field_row(
             id_card,
@@ -82,7 +84,7 @@ class PersonalSchedule:
             form_vars["pan"],
             key="pan",
             validation_refs=validation_refs,
-            tooltip="10-digit Alphanumeric ID. Must be in format: ABCDE1234F"
+            tooltip="10-digit Alphanumeric ID. Must be in format: ABCDE1234F",
         )
         field_row(
             id_card,
@@ -90,7 +92,7 @@ class PersonalSchedule:
             form_vars["aadhaar"],
             key="aadhaar",
             validation_refs=validation_refs,
-            tooltip="12-digit UIDAI Number"
+            tooltip="12-digit UIDAI Number",
         )
         field_row(
             id_card,
@@ -105,7 +107,7 @@ class PersonalSchedule:
             form_vars["dob"],
             key="dob",
             validation_refs=validation_refs,
-            tooltip="Enter date in DD-MM-YYYY format"
+            tooltip="Enter date in DD-MM-YYYY format",
         )
         field_row(
             id_card,
@@ -199,11 +201,42 @@ class PersonalSchedule:
         field_row(p_addr_card, "Area/Locality", form_vars["addr_area"])
         field_row(p_addr_card, "City/Town/District", form_vars["addr_city"])
         states = [
-            "Andhra", "Arunachal", "Assam", "Bihar", "Chhattisgarh", "Delhi", "Goa", "Gujarat", "Haryana",
-            "Himachal", "J&K", "Jharkhand", "Karnataka", "Kerala", "MP", "Maharashtra", "Manipur", "Meghalaya",
-            "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana",
-            "Tripura", "UP", "Uttarakhand", "West Bengal", "Andaman", "Chandigarh", "Dadra", "Ladakh",
-            "Lakshadweep", "Puducherry",
+            "Andhra",
+            "Arunachal",
+            "Assam",
+            "Bihar",
+            "Chhattisgarh",
+            "Delhi",
+            "Goa",
+            "Gujarat",
+            "Haryana",
+            "Himachal",
+            "J&K",
+            "Jharkhand",
+            "Karnataka",
+            "Kerala",
+            "MP",
+            "Maharashtra",
+            "Manipur",
+            "Meghalaya",
+            "Mizoram",
+            "Nagaland",
+            "Odisha",
+            "Punjab",
+            "Rajasthan",
+            "Sikkim",
+            "Tamil Nadu",
+            "Telangana",
+            "Tripura",
+            "UP",
+            "Uttarakhand",
+            "West Bengal",
+            "Andaman",
+            "Chandigarh",
+            "Dadra",
+            "Ladakh",
+            "Lakshadweep",
+            "Puducherry",
         ]
         combo_field_row(
             p_addr_card, "State / UT", form_vars["addr_state"], sorted(states)
@@ -237,7 +270,6 @@ class PersonalSchedule:
 
 
 def _handle_form16_import(parent, form_vars):
-    """Handle Form 16 PDF import with AI extraction."""
     from tkinter import filedialog, messagebox
     from src.services.io.import_service import ImportService
 
@@ -268,17 +300,18 @@ def _handle_form16_import(parent, form_vars):
                 _apply_ai_suggestions(form_vars, ai_data)
                 messagebox.showinfo(
                     "AI Extraction Complete",
-                    f"Extracted data from Form 16.\nConfidence: {ai_data.get('confidence', 0):.0%}\n\nReview and accept the suggestions."
+                    f"Extracted data from Form 16.\nConfidence: {ai_data.get('confidence', 0):.0%}\n\nReview and accept the suggestions.",
                 )
             elif result.get("status") == "disabled":
-                messagebox.showwarning("AI Disabled", "AI is disabled. Enable it in Settings to use this feature.")
+                messagebox.showwarning(
+                    "AI Disabled",
+                    "AI is disabled. Enable it in Settings to use this feature.",
+                )
             else:
                 messagebox.showerror("AI Error", result.get("error", "Unknown error"))
 
         ImportService.extract_with_ai(
-            text=text,
-            root_window=root_window,
-            on_result=on_ai_result
+            text=text, root_window=root_window, on_result=on_ai_result
         )
 
     except Exception as e:
@@ -286,7 +319,6 @@ def _handle_form16_import(parent, form_vars):
 
 
 def _handle_form26as_import(parent, form_vars):
-    """Handle Form 26AS PDF import with AI extraction."""
     from tkinter import filedialog, messagebox
     from src.services.io.import_service import ImportService
 
@@ -316,17 +348,17 @@ def _handle_form26as_import(parent, form_vars):
                 ai_data = result.get("data", {})
                 messagebox.showinfo(
                     "AI Form 26AS Extraction Complete",
-                    f"Extracted TDS details.\nTotal TDS: Rs.{ai_data.get('total_tds', 0):,}\nConfidence: {ai_data.get('confidence', 0):.0%}"
+                    f"Extracted TDS details.\nTotal TDS: Rs.{ai_data.get('total_tds', 0):,}\nConfidence: {ai_data.get('confidence', 0):.0%}",
                 )
             elif result.get("status") == "disabled":
-                messagebox.showwarning("AI Disabled", "AI is disabled. Enable it in Settings.")
+                messagebox.showwarning(
+                    "AI Disabled", "AI is disabled. Enable it in Settings."
+                )
             else:
                 messagebox.showerror("AI Error", result.get("error", "Unknown error"))
 
         ImportService.extract_form26as_with_ai(
-            text=text,
-            root_window=root_window,
-            on_result=on_ai_result
+            text=text, root_window=root_window, on_result=on_ai_result
         )
 
     except Exception as e:
@@ -334,7 +366,6 @@ def _handle_form26as_import(parent, form_vars):
 
 
 def _handle_ais_ai_import(parent, form_vars):
-    """Handle AIS JSON import with AI extraction."""
     from tkinter import filedialog, messagebox, simpledialog
     from src.services.io.import_service import ImportService
     import json
@@ -355,17 +386,17 @@ def _handle_ais_ai_import(parent, form_vars):
                 ai_data = result.get("data", {})
                 messagebox.showinfo(
                     "AI AIS Extraction Complete",
-                    f"Extracted AIS data.\nTotal Income: Rs.{ai_data.get('total_income', 0):,}\nTotal TDS: Rs.{ai_data.get('total_tds', 0):,}\nConfidence: {ai_data.get('confidence', 0):.0%}"
+                    f"Extracted AIS data.\nTotal Income: Rs.{ai_data.get('total_income', 0):,}\nTotal TDS: Rs.{ai_data.get('total_tds', 0):,}\nConfidence: {ai_data.get('confidence', 0):.0%}",
                 )
             elif result.get("status") == "disabled":
-                messagebox.showwarning("AI Disabled", "AI is disabled. Enable it in Settings.")
+                messagebox.showwarning(
+                    "AI Disabled", "AI is disabled. Enable it in Settings."
+                )
             else:
                 messagebox.showerror("AI Error", result.get("error", "Unknown error"))
 
         ImportService.extract_ais_with_ai(
-            ais_json=ais_json,
-            root_window=root_window,
-            on_result=on_ai_result
+            ais_json=ais_json, root_window=root_window, on_result=on_ai_result
         )
 
     except Exception as e:
@@ -373,22 +404,17 @@ def _handle_ais_ai_import(parent, form_vars):
 
 
 def _handle_tax_advisory(parent, form_vars):
-    """Handle AI tax advisory request."""
     from tkinter import messagebox
     from src.services.io.import_service import ImportService
 
     root_window = parent.winfo_toplevel()
-
-    # Build vardict from form_vars
     vardict = {
         "income": {
             "sal_gross": form_vars.get("sal_gross", 0) or 0,
             "os_dividend": [],
-            "total_income": form_vars.get("total_income", 0) or 0
+            "total_income": form_vars.get("total_income", 0) or 0,
         },
-        "deductions": {
-            "ded_16ia": form_vars.get("ded_16ia", 0) or 0
-        }
+        "deductions": {"ded_16ia": form_vars.get("ded_16ia", 0) or 0},
     }
 
     def on_ai_result(result):
@@ -417,19 +443,18 @@ def _handle_tax_advisory(parent, form_vars):
             msg += f"\nConfidence: {ai_data.get('confidence', 0):.0%}"
             messagebox.showinfo("Tax Advisory", msg)
         elif result.get("status") == "disabled":
-            messagebox.showwarning("AI Disabled", "AI is disabled. Enable it in Settings.")
+            messagebox.showwarning(
+                "AI Disabled", "AI is disabled. Enable it in Settings."
+            )
         else:
             messagebox.showerror("AI Error", result.get("error", "Unknown error"))
 
     ImportService.get_tax_advisory(
-        vardict=vardict,
-        root_window=root_window,
-        on_result=on_ai_result
+        vardict=vardict, root_window=root_window, on_result=on_ai_result
     )
 
 
 def _apply_ai_suggestions(form_vars, ai_data):
-    """Apply AI extracted data to form variables."""
     field_mappings = {
         "sal_gross": "sal_gross",
         "sal_perks": "sal_perks",

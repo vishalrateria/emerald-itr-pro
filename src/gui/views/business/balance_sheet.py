@@ -46,25 +46,44 @@ class BalanceSheetSchedule:
             sm.grid_columnconfigure(col, weight=1)
 
         sl["bs_equity_total"] = ctk.CTkLabel(
-            sm, text="₹ 0", font=Theme.H2, text_color=Theme.TEXT_PRIMARY, anchor="center"
+            sm,
+            text="₹ 0",
+            font=Theme.H2,
+            text_color=Theme.TEXT_PRIMARY,
+            anchor="center",
         )
-        sl["bs_equity_total"].grid(row=0, column=0, sticky="e", padx=INNER_PADX, pady=SPACING_MD)
+        sl["bs_equity_total"].grid(
+            row=0, column=0, sticky="e", padx=INNER_PADX, pady=SPACING_MD
+        )
 
         sl["bs_liab_total_val"] = ctk.CTkLabel(
             sm, text="₹ 0", font=Theme.H2, text_color=Theme.ERROR_RED, anchor="center"
         )
-        sl["bs_liab_total_val"].grid(row=0, column=1, sticky="e", padx=INNER_PADX, pady=SPACING_MD)
+        sl["bs_liab_total_val"].grid(
+            row=0, column=1, sticky="e", padx=INNER_PADX, pady=SPACING_MD
+        )
 
         sl["bs_assets_total_val"] = ctk.CTkLabel(
-            sm, text="₹ 0", font=Theme.H2, text_color=Theme.SUCCESS_GREEN, anchor="center"
+            sm,
+            text="₹ 0",
+            font=Theme.H2,
+            text_color=Theme.SUCCESS_GREEN,
+            anchor="center",
         )
-        sl["bs_assets_total_val"].grid(row=0, column=2, sticky="e",
-                                       padx=INNER_PADX, pady=SPACING_MD)
+        sl["bs_assets_total_val"].grid(
+            row=0, column=2, sticky="e", padx=INNER_PADX, pady=SPACING_MD
+        )
 
         sl["bs_status"] = ctk.CTkLabel(
-            sm, text="BALANCED", font=Theme.H2, text_color=Theme.SUCCESS_GREEN, anchor="center"
+            sm,
+            text="BALANCED",
+            font=Theme.H2,
+            text_color=Theme.SUCCESS_GREEN,
+            anchor="center",
         )
-        sl["bs_status"].grid(row=0, column=3, sticky="e", padx=INNER_PADX, pady=SPACING_MD)
+        sl["bs_status"].grid(
+            row=0, column=3, sticky="e", padx=INNER_PADX, pady=SPACING_MD
+        )
 
         def up(*_):
             try:
@@ -127,15 +146,31 @@ class BalanceSheetSchedule:
                 g(k).trace_add("write", up)
 
         ctk.CTkLabel(
-            sm, text="TOTAL EQUITY", font=Theme.CAPTION, text_color=Theme.TEXT_DIM, anchor="center"
+            sm,
+            text="TOTAL EQUITY",
+            font=Theme.CAPTION,
+            text_color=Theme.TEXT_DIM,
+            anchor="center",
         ).grid(row=1, column=0, sticky="w", pady=(0, SPACING_SM))
         ctk.CTkLabel(
-            sm, text="LIABILITIES", font=Theme.CAPTION, text_color=Theme.TEXT_DIM, anchor="center"
+            sm,
+            text="LIABILITIES",
+            font=Theme.CAPTION,
+            text_color=Theme.TEXT_DIM,
+            anchor="center",
         ).grid(row=1, column=1, sticky="w", pady=(0, SPACING_SM))
         ctk.CTkLabel(
-            sm, text="TOTAL ASSETS", font=Theme.CAPTION, text_color=Theme.TEXT_DIM, anchor="center"
+            sm,
+            text="TOTAL ASSETS",
+            font=Theme.CAPTION,
+            text_color=Theme.TEXT_DIM,
+            anchor="center",
         ).grid(row=1, column=2, sticky="w", pady=(0, SPACING_SM))
         ctk.CTkLabel(
-            sm, text="STATUS", font=Theme.CAPTION, text_color=Theme.TEXT_DIM, anchor="center"
+            sm,
+            text="STATUS",
+            font=Theme.CAPTION,
+            text_color=Theme.TEXT_DIM,
+            anchor="center",
         ).grid(row=1, column=3, sticky="w", pady=(0, SPACING_SM))
         return f

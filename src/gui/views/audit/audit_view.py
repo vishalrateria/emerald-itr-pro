@@ -27,21 +27,19 @@ class AuditSchedule:
                 text=h,
                 font=Theme.BODY_BOLD,
                 text_color=Theme.TEXT_PRIMARY,
-                anchor="w" if i == 0 else "e"
+                anchor="w" if i == 0 else "e",
             ).grid(row=0, column=i, sticky="ew", padx=INNER_PADX, pady=SPACING_SM)
 
         def _comp_row(label, return_key, ais_val, row_idx):
             row = ctk.CTkFrame(comp_card, fg_color="transparent")
-            row.pack(fill="x", padx=INNER_PADX, pady=SPACING_XS)
+            row.pack(fill="x", padx=INNER_PADX, pady=SPACING_SM)
             row.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
             ctk.CTkLabel(
                 row, text=label, font=Theme.BODY, text_color=Theme.TEXT_DIM, anchor="w"
             ).grid(row=0, column=0, sticky="ew", padx=INNER_PADX)
 
-            ret_lbl = ctk.CTkLabel(
-                row, text="₹ 0", font=Theme.BODY_BOLD, anchor="e"
-            )
+            ret_lbl = ctk.CTkLabel(row, text="₹ 0", font=Theme.BODY_BOLD, anchor="e")
             ret_lbl.grid(row=0, column=1, sticky="ew", padx=INNER_PADX)
             sl[f"audit_ret_{return_key}"] = ret_lbl
 
@@ -50,11 +48,16 @@ class AuditSchedule:
                 text=f"₹ {int(ais_val):,}",
                 font=Theme.BODY,
                 text_color=Theme.ACCENT_PRIMARY,
-                anchor="e"
+                anchor="e",
             ).grid(row=0, column=2, sticky="ew", padx=INNER_PADX)
 
-            stat_lbl = ctk.CTkLabel(row, text="PENDING", font=Theme.CAPTION,
-                                    text_color=Theme.TEXT_DIM, anchor="e")
+            stat_lbl = ctk.CTkLabel(
+                row,
+                text="PENDING",
+                font=Theme.CAPTION,
+                text_color=Theme.TEXT_DIM,
+                anchor="e",
+            )
             stat_lbl.grid(row=0, column=3, sticky="ew", padx=INNER_PADX)
             sl[f"audit_stat_{return_key}"] = stat_lbl
 
@@ -63,6 +66,7 @@ class AuditSchedule:
         ais_sal, ais_int, ais_div, ais_tds, ais_bp = 0, 0, 0, 0, 0
         try:
             from src.services.io.import_service import ImportService
+
             ais_data = getattr(ImportService, "ais_cache", {})
             if ais_data:
                 for entry in ais_data.get("tds_details", []):

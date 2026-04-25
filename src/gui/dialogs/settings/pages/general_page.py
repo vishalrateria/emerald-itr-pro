@@ -1,6 +1,4 @@
 import customtkinter as ctk
-import json
-import os
 from src.services.settings_service import SettingsManager
 from ..widgets.section_label import section_label
 from ..widgets.form_row import create_combo, create_toggle, create_entry
@@ -9,76 +7,63 @@ from ..widgets.form_row import create_combo, create_toggle, create_entry
 def build_page_general(dialog, p):
     section_label(p, "General")
 
-    dialog._v_autosave = ctk.StringVar()
-    dialog._v_default_itr = ctk.StringVar()
-    dialog._v_open_last = ctk.BooleanVar()
-    dialog._v_title_prefix = ctk.StringVar()
-    dialog._v_ai_enabled = ctk.BooleanVar()
-
     autosave_labels = [o[0] for o in SettingsManager.get_autosave_options()]
     create_combo(p, "Autosave Interval", dialog._v_autosave, autosave_labels)
-    create_combo(p, "Default ITR Type", dialog._v_default_itr,
-                SettingsManager.get_itr_type_options())
-    create_toggle(p, "Open Last Client on Startup", dialog._v_open_last)
-    create_entry(p, "Window Title Prefix", dialog._v_title_prefix,
-                "e.g. EMERALD ITR PRO")
-
-    section_label(p, "AI Assistant")
-    create_toggle(p, "Enable AI Data Extraction", dialog._v_ai_enabled)
-
-    ai_profile_label = ctk.CTkLabel(
+    create_combo(
         p,
-        text="",
-        font=ctk.CTkFont(size=12),
-        text_color="#888888"
+        "Default ITR Type",
+        dialog._v_default_itr,
+        SettingsManager.get_itr_type_options(),
     )
-    ai_profile_label.pack(anchor="w", padx=150, pady=(0, 10))
-    dialog._ai_profile_label = ai_profile_label
+    create_toggle(p, "Open Last Client on Startup", dialog._v_open_last)
+    create_entry(
+        p, "Window Title Prefix", dialog._v_title_prefix, "e.g. EMERALD ITR PRO"
+    )
 
-    _update_ai_profile_display(ai_profile_label)
+    section_label(p, "ITR-Specific Behavior")
 
+    create_toggle(p, "Auto-save Form Progress Regularly", dialog._v_autosave_form)
+    create_toggle(p, "Validate Fields on Field Exit", dialog._v_validate_on_exit)
+    create_toggle(p, "Show Field-level Errors Inline", dialog._v_inline_errors)
 
-def _update_ai_profile_display(label):
-    try:
-        from src.services.ai.hardware_utils import get_hardware_profile
-        profile = get_hardware_profile()
-        profile_labels = {
-            "eco": "Eco (< 8GB RAM) - AI Disabled",
-            "standard": "Standard (8-12GB RAM) - Limited Mode",
-            "pro": "Pro (> 12GB RAM) - Full Mode"
-        }
-        label.configure(text=f"Hardware Profile: {profile_labels.get(profile, profile)}")
-    except Exception:
-        label.configure(text="Hardware Profile: Unknown")
+    create_entry(
+        p, "Default Schedule Selections", dialog._v_def_schedules, "e.g. S, HP, CG, OS"
+    )
 
+    section_label(p, "Data Management")
 
-def load_ai_settings():
-    """Load AI settings from settings.json"""
-    settings_path = "settings.json"
-    try:
-        if os.path.exists(settings_path):
-            with open(settings_path, "r") as f:
-                settings = json.load(f)
-            return settings.get("ai_enabled", True)
-    except Exception:
-        pass
-    return True
+    from src.gui.styles.theme import Theme
+    from src.gui.styles.constants import BUTTON_HEIGHT, ACTION_BUTTON_WIDTH_LG
 
+    btn_frame = ctk.CTkFrame(p, fg_color="transparent")
+    btn_frame.pack(fill="x", pady=10)
 
-def save_ai_settings(enabled: bool):
-    """Save AI settings to settings.json"""
-    settings_path = "settings.json"
-    try:
-        if os.path.exists(settings_path):
-            with open(settings_path, "r") as f:
-                settings = json.load(f)
-        else:
-            settings = {}
+    ctk.CTkButton(
+        btn_frame,
+        text="🧹  Clear Recent Clients",
+        width=ACTION_BUTTON_WIDTH_LG,
+        height=BUTTON_HEIGHT,
+        font=Theme.BODY_BOLD,
+        command=dialog._handle_clear_recent_clients,
+        **Theme.get_button_style("secondary")
+    ).pack(side="left", padx=(0, 10))
 
-        settings["ai_enabled"] = enabled
+    ctk.CTkButton(
+        btn_frame,
+        text="📤  Export Settings",
+        width=ACTION_BUTTON_WIDTH_LG,
+        height=BUTTON_HEIGHT,
+        font=Theme.BODY_BOLD,
+        command=dialog._handle_export_settings,
+        **Theme.get_button_style("secondary")
+    ).pack(side="left", padx=(0, 10))
 
-        with open(settings_path, "w") as f:
-            json.dump(settings, f, indent=2)
-    except Exception as e:
-        from src.services.logging_service import log as logger
-        logger.error(f"Failed to save AI settings: {e}")
+    ctk.CTkButton(
+        btn_frame,
+        text="📥  Import Settings",
+        width=ACTION_BUTTON_WIDTH_LG,
+        height=BUTTON_HEIGHT,
+        font=Theme.BODY_BOLD,
+        command=dialog._handle_import_settings,
+        **Theme.get_button_style("secondary")
+    ).pack(side="left")

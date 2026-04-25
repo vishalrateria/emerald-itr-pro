@@ -50,11 +50,20 @@ class VDASchedule:
                 [
                     {"textvariable": fv[f"vda_{i}_token"], "key": f"vda_{i}_token"},
                     {"textvariable": fv[f"vda_{i}_type"], "key": f"vda_{i}_type"},
-                    {"textvariable": fv[f"vda_{i}_exchange"], "key": f"vda_{i}_exchange"},
+                    {
+                        "textvariable": fv[f"vda_{i}_exchange"],
+                        "key": f"vda_{i}_exchange",
+                    },
                     {"textvariable": fv[f"vda_{i}_cost"], "key": f"vda_{i}_cost"},
                     {"textvariable": fv[f"vda_{i}_sale"], "key": f"vda_{i}_sale"},
-                    {"textvariable": fv[f"vda_{i}_acq_date"], "key": f"vda_{i}_acq_date"},
-                    {"textvariable": fv[f"vda_{i}_trans_date"], "key": f"vda_{i}_trans_date"},
+                    {
+                        "textvariable": fv[f"vda_{i}_acq_date"],
+                        "key": f"vda_{i}_acq_date",
+                    },
+                    {
+                        "textvariable": fv[f"vda_{i}_trans_date"],
+                        "key": f"vda_{i}_trans_date",
+                    },
                 ],
                 validation_refs=validation_refs,
             )

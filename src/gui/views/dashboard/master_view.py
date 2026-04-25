@@ -1,4 +1,14 @@
-from src.gui.styles.constants import SPACING_XS, SPACING_SM, SPACING_MD, SPACING_LG, CARD_PADX, INNER_PADX, BUTTON_HEIGHT_SM, ICON_BUTTON_WIDTH_SM, DIVIDER_HEIGHT
+from src.gui.styles.constants import (
+    SPACING_XS,
+    SPACING_SM,
+    SPACING_MD,
+    SPACING_LG,
+    CARD_PADX,
+    INNER_PADX,
+    BUTTON_HEIGHT_SM,
+    ICON_BUTTON_WIDTH_SM,
+    DIVIDER_HEIGHT,
+)
 import customtkinter as ctk
 from src.gui.styles.theme import Theme
 from src.gui.widgets.common import (
@@ -12,8 +22,12 @@ class MasterSchedule:
     @staticmethod
     def create_frame(parent, fv, sf, sl):
         f = ctk.CTkFrame(parent, fg_color="transparent")
-        page_header(f, "MASTER COMPUTATION DASHBOARD",
-                    "Final Review of Income Sources & Tax Liability", accent_color=Theme.GTI_BLUE)
+        page_header(
+            f,
+            "MASTER COMPUTATION DASHBOARD",
+            "Final Review of Income Sources & Tax Liability",
+            accent_color=Theme.GTI_BLUE,
+        )
 
         banner = make_card(f, pady_bottom=SPACING_SM)
         banner.pack_forget()
@@ -22,14 +36,29 @@ class MasterSchedule:
         banner_info.pack(side="left", padx=CARD_PADX, pady=SPACING_SM)
 
         sl["m_banner_text"] = ctk.CTkLabel(
-            banner_info, text="AY 2026-27  ·  NEW TAX REGIME", font=Theme.H3, text_color=Theme.TEXT_DIM, anchor="w")
+            banner_info,
+            text="AY 2026-27  ·  NEW TAX REGIME",
+            font=Theme.H3,
+            text_color=Theme.TEXT_DIM,
+            anchor="w",
+        )
         sl["m_banner_text"].pack(fill="x")
-        sl["m_banner_tip"] = ctk.CTkLabel(banner_info, text="Tip: Enter Salary/Business details to see tax impact",
-                                          font=Theme.CAPTION, text_color=Theme.ACCENT_PRIMARY, anchor="w")
+        sl["m_banner_tip"] = ctk.CTkLabel(
+            banner_info,
+            text="Tip: Enter Salary/Business details to see tax impact",
+            font=Theme.CAPTION,
+            text_color=Theme.ACCENT_PRIMARY,
+            anchor="w",
+        )
         sl["m_banner_tip"].pack(fill="x")
 
         sl["tax_net_banner"] = ctk.CTkLabel(
-            banner, text="PAYABLE:  ₹ 0", font=Theme.H1, text_color=Theme.ERROR_RED, anchor="e")
+            banner,
+            text="PAYABLE:  ₹ 0",
+            font=Theme.H1,
+            text_color=Theme.ERROR_RED,
+            anchor="e",
+        )
         sl["tax_net_banner"].pack(side="right", padx=CARD_PADX, pady=SPACING_MD)
 
         grid = ctk.CTkFrame(f, fg_color="transparent")
@@ -37,32 +66,116 @@ class MasterSchedule:
         grid.columnconfigure(0, weight=1, pad=6)
         grid.columnconfigure(1, weight=1, pad=6)
         grid.rowconfigure(0, weight=1)
-        left = make_card(grid, "INCOME SOURCES", pady_bottom=0, accent_color=Theme.GTI_BLUE, hover=True)
+        left = make_card(
+            grid,
+            "INCOME SOURCES",
+            pady_bottom=0,
+            accent_color=Theme.GTI_BLUE,
+            hover=True,
+            pack=False,
+        )
         left.grid(row=0, column=0, sticky="nsew", padx=(0, SPACING_XS))
 
         inc_container = ctk.CTkFrame(left, fg_color="transparent")
         inc_container.pack(fill="both", expand=True, padx=2)
         inc_container.grid_columnconfigure(0, weight=1)
-        summary_row(inc_container, 0, "1. Salary Income", "sal", "row_sal",
-                    sl, status_key="sal", edit_target="salary", switch_fn=sf)
-        summary_row(inc_container, 1, "2. House Property", "hp_total", "row_hp_total",
-                    sl, status_key="hp", edit_target="hp", switch_fn=sf)
-        summary_row(inc_container, 2, "3. Business & Profession", "bp_total", "row_bp_total",
-                    sl, status_key="bp", edit_target="business_financials", switch_fn=sf)
-        summary_row(inc_container, 3, "4. STCG (Real Estate/Others)", "stcg_sum",
-                    "row_stcg_sum", sl, status_key="stcg", edit_target="stcg", switch_fn=sf)
-        summary_row(inc_container, 4, "5. LTCG (112A/Others)", "ltcg_112a_sum",
-                    "row_ltcg_112a_sum", sl, status_key="ltcg", edit_target="ltcg", switch_fn=sf)
-        summary_row(inc_container, 5, "6. VDA (Crypto/NFT) @ 30%", "vda_sum",
-                    "row_vda_sum", sl, status_key="vda", edit_target="vda", switch_fn=sf)
-        summary_row(inc_container, 6, "7. Income from Other Sources", "os_total",
-                    "row_os_total", sl, status_key="os", edit_target="other_sources", switch_fn=sf)
+        summary_row(
+            inc_container,
+            0,
+            "1. Salary Income",
+            "sal",
+            "row_sal",
+            sl,
+            status_key="sal",
+            edit_target="salary",
+            switch_fn=sf,
+        )
+        summary_row(
+            inc_container,
+            1,
+            "2. House Property",
+            "hp_total",
+            "row_hp_total",
+            sl,
+            status_key="hp",
+            edit_target="hp",
+            switch_fn=sf,
+        )
+        summary_row(
+            inc_container,
+            2,
+            "3. Business & Profession",
+            "bp_total",
+            "row_bp_total",
+            sl,
+            status_key="bp",
+            edit_target="business_financials",
+            switch_fn=sf,
+        )
+        summary_row(
+            inc_container,
+            3,
+            "4. STCG (Real Estate/Others)",
+            "stcg_sum",
+            "row_stcg_sum",
+            sl,
+            status_key="stcg",
+            edit_target="stcg",
+            switch_fn=sf,
+        )
+        summary_row(
+            inc_container,
+            4,
+            "5. LTCG (112A/Others)",
+            "ltcg_112a_sum",
+            "row_ltcg_112a_sum",
+            sl,
+            status_key="ltcg",
+            edit_target="ltcg",
+            switch_fn=sf,
+        )
+        summary_row(
+            inc_container,
+            5,
+            "6. VDA (Crypto/NFT) @ 30%",
+            "vda_sum",
+            "row_vda_sum",
+            sl,
+            status_key="vda",
+            edit_target="vda",
+            switch_fn=sf,
+        )
+        summary_row(
+            inc_container,
+            6,
+            "7. Income from Other Sources",
+            "os_total",
+            "row_os_total",
+            sl,
+            status_key="os",
+            edit_target="other_sources",
+            switch_fn=sf,
+        )
 
         ctk.CTkFrame(left, height=DIVIDER_HEIGHT, fg_color=Theme.SECTION_BORDER).pack(
-            fill="x", padx=INNER_PADX, pady=(SPACING_SM, 0))
-        summary_row(left, 8, "8. GROSS TOTAL INCOME", "gti", "row_gti", sl)
-        summary_row(left, 9, "9. Total Deductions (Ch. VI-A)", "ded_total", "row_ded_total", sl)
-        summary_row(left, 10, "10. TOTAL TAXABLE INCOME", "tti", "row_tti", sl)
+            fill="x", padx=INNER_PADX, pady=(SPACING_SM, 0)
+        )
+
+        totals_container = ctk.CTkFrame(left, fg_color="transparent")
+        totals_container.pack(fill="x", padx=2)
+        totals_container.grid_columnconfigure(0, weight=1)
+        summary_row(totals_container, 0, "8. GROSS TOTAL INCOME", "gti", "row_gti", sl)
+        summary_row(
+            totals_container,
+            1,
+            "9. Total Deductions (Ch. VI-A)",
+            "ded_total",
+            "row_ded_total",
+            sl,
+        )
+        summary_row(
+            totals_container, 2, "10. TOTAL TAXABLE INCOME", "tti", "row_tti", sl
+        )
 
         gti_row = ctk.CTkFrame(left, fg_color=Theme.BG_INPUT, corner_radius=8)
         gti_row.pack(fill="x", padx=INNER_PADX, pady=(SPACING_XS, SPACING_MD))
@@ -83,20 +196,30 @@ class MasterSchedule:
         )
         gti_lbl.grid(row=0, column=1, sticky="e", padx=INNER_PADX, pady=SPACING_SM)
         sl["gti_banner"] = gti_lbl
-        right = make_card(grid, "TAX COMPUTATION", pady_bottom=0, title_color=Theme.TEXT_DIM, accent_color=Theme.TAX_AMBER, hover=True)
-        right.pack_forget()
+        right = make_card(
+            grid,
+            "TAX COMPUTATION",
+            pady_bottom=0,
+            title_color=Theme.TEXT_DIM,
+            accent_color=Theme.TAX_AMBER,
+            hover=True,
+            pack=False,
+        )
         right.grid(row=0, column=1, sticky="nsew", padx=(SPACING_XS, 0))
         tax_container = ctk.CTkFrame(right, fg_color="transparent")
 
         def _tax_row(lbl, sum_key, row_idx=0, color=None, target=None, bold=False):
             if row_idx >= 0:
-                row = ctk.CTkFrame(tax_container, fg_color="transparent",
-                                   corner_radius=Theme.RADIUS_SM)
+                row = ctk.CTkFrame(
+                    tax_container, fg_color="transparent", corner_radius=Theme.RADIUS_SM
+                )
                 row.grid(row=row_idx, column=0, sticky="ew", padx=INNER_PADX, pady=1)
                 row.bind("<Enter>", lambda e: row.configure(fg_color=Theme.BG_INPUT))
                 row.bind("<Leave>", lambda e: row.configure(fg_color="transparent"))
             else:
-                row = ctk.CTkFrame(right, fg_color="transparent", corner_radius=Theme.RADIUS_SM)
+                row = ctk.CTkFrame(
+                    right, fg_color="transparent", corner_radius=Theme.RADIUS_SM
+                )
                 row.pack(fill="x", padx=INNER_PADX, pady=SPACING_XS)
                 row.bind("<Enter>", lambda e: row.configure(fg_color=Theme.BG_INPUT))
                 row.bind("<Leave>", lambda e: row.configure(fg_color="transparent"))
@@ -104,7 +227,12 @@ class MasterSchedule:
 
             fnt = Theme.BODY_BOLD if bold else Theme.BODY
             lbl_w = ctk.CTkLabel(
-                row, text=lbl, font=fnt, text_color=Theme.TEXT_DIM, anchor="w", justify="left"
+                row,
+                text=lbl,
+                font=fnt,
+                text_color=Theme.TEXT_DIM,
+                anchor="w",
+                justify="left",
             )
             lbl_w.grid(row=0, column=0, sticky="ew", padx=SPACING_SM, pady=SPACING_XS)
             col = 1
@@ -126,7 +254,9 @@ class MasterSchedule:
                 text_color=color or Theme.TEXT_PRIMARY,
                 anchor="e",
             )
-            val_lbl.grid(row=0, column=col, sticky="e", padx=INNER_PADX, pady=SPACING_XS)
+            val_lbl.grid(
+                row=0, column=col, sticky="e", padx=INNER_PADX, pady=SPACING_XS
+            )
             sl[sum_key] = val_lbl
             return val_lbl
 
@@ -150,9 +280,9 @@ class MasterSchedule:
             return lbl_w
 
         def _divider(frame):
-            ctk.CTkFrame(frame, height=DIVIDER_HEIGHT, fg_color=Theme.SECTION_BORDER).pack(
-                fill="x", padx=INNER_PADX, pady=(SPACING_XS, SPACING_XS)
-            )
+            ctk.CTkFrame(
+                frame, height=DIVIDER_HEIGHT, fg_color=Theme.SECTION_BORDER
+            ).pack(fill="x", padx=INNER_PADX, pady=(SPACING_XS, SPACING_XS))
 
         _tax_row(
             "Chapter VI-A Deductions",
@@ -228,12 +358,16 @@ class MasterSchedule:
         sl["row_tax_net"] = net_row
         sl["tax_due"] = sl["tax_total"]
 
-        diag = make_card(f, "STATUTORY AUDIT & DIAGNOSTICS", pady_bottom=SPACING_LG, title_color=Theme.TEXT_DIM, accent_color=Theme.TTI_PURPLE, hover=True)
-
-        sl["audit_log"] = ctk.CTkFrame(
-            diag,
-            fg_color="transparent"
+        diag = make_card(
+            f,
+            "STATUTORY AUDIT & DIAGNOSTICS",
+            pady_bottom=SPACING_LG,
+            title_color=Theme.TEXT_DIM,
+            accent_color=Theme.TTI_PURPLE,
+            hover=True,
         )
+
+        sl["audit_log"] = ctk.CTkFrame(diag, fg_color="transparent")
         sl["audit_log"].pack(fill="x", padx=INNER_PADX, pady=SPACING_SM)
 
         return f

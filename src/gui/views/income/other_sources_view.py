@@ -17,7 +17,7 @@ class OtherSourcesSchedule:
             f,
             "SCHEDULE OS — OTHER SOURCES",
             "Income chargeable under 'Income from Other Sources'",
-            accent_color=Theme.GTI_BLUE
+            accent_color=Theme.GTI_BLUE,
         )
         int_card = make_card(f, "INTEREST INCOME", accent_color=Theme.GTI_BLUE)
         field_row(

@@ -7,19 +7,18 @@ from src.gui.widgets.common import (
     field_row,
 )
 
+
 class SalarySchedule:
     @staticmethod
     def create_frame(
-        parent: ctk.CTkFrame,
-        form_vars: dict,
-        validation_refs: dict = None
+        parent: ctk.CTkFrame, form_vars: dict, validation_refs: dict = None
     ) -> ctk.CTkFrame:
         f = ctk.CTkFrame(parent, fg_color="transparent")
         page_header(
             f,
             "SALARY INCOME & DEDUCTIONS",
             "Schedule S — Sections 17(1), 17(2), 17(3)  |  New Tax Regime",
-            accent_color=Theme.GTI_BLUE
+            accent_color=Theme.GTI_BLUE,
         )
         gross = make_card(f, "GROSS SALARY COMPONENTS", accent_color=Theme.GTI_BLUE)
         field_row(
@@ -28,7 +27,7 @@ class SalarySchedule:
             form_vars["sal_gross"],
             key="sal_gross",
             validation_refs=validation_refs,
-            tooltip="Basic salary, dearness allowance, and bonus as per Form 16 Part B."
+            tooltip="Basic salary, dearness allowance, and bonus as per Form 16 Part B.",
         )
         field_row(
             gross,
@@ -36,7 +35,7 @@ class SalarySchedule:
             form_vars["sal_perks"],
             key="sal_perks",
             validation_refs=validation_refs,
-            tooltip="Value of rent-free accommodation, car, etc., provided by employer."
+            tooltip="Value of rent-free accommodation, car, etc., provided by employer.",
         )
         field_row(
             gross,
@@ -44,7 +43,7 @@ class SalarySchedule:
             form_vars["sal_profits"],
             key="sal_profits",
             validation_refs=validation_refs,
-            tooltip="Retrenchment compensation or payments from unrecognised provident fund."
+            tooltip="Retrenchment compensation or payments from unrecognised provident fund.",
         )
         card_spacer(gross)
         allow = make_card(f, "EXEMPT ALLOWANCES")

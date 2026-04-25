@@ -23,48 +23,28 @@ CHECK FOR:
 
 Output JSON with warnings if any discrepancies found. Include a 'confidence' score between 0.0 and 1.0."""
 
+
 def get_extraction_prompt(raw_text: str, schema_json: str) -> list:
-    """
-    Returns formatted messages for extraction task.
-    
-    Args:
-        raw_text: Sanitized text from document
-        schema_json: JSON schema string
-    
-    Returns:
-        List of message dicts for LLM
-    """
     user_prompt = USER_PROMPT_EXTRACTION_TEMPLATE.format(
-        raw_text_sanitized=raw_text,
-        form_16_schema=schema_json
+        raw_text_sanitized=raw_text, form_16_schema=schema_json
     )
-    
+
     return [
         {"role": "system", "content": SYSTEM_PROMPT_EXTRACTION},
-        {"role": "user", "content": user_prompt}
+        {"role": "user", "content": user_prompt},
     ]
+
 
 def get_audit_prompt(vardict_json: str) -> list:
-    """
-    Returns formatted messages for audit task.
-    
-    Args:
-        vardict_json: VarDict state as JSON string
-    
-    Returns:
-        List of message dicts for LLM
-    """
-    user_prompt = USER_PROMPT_AUDIT_TEMPLATE.format(
-        vardict_json=vardict_json
-    )
-    
+    user_prompt = USER_PROMPT_AUDIT_TEMPLATE.format(vardict_json=vardict_json)
+
     return [
         {"role": "system", "content": SYSTEM_PROMPT_AUDIT},
-        {"role": "user", "content": user_prompt}
+        {"role": "user", "content": user_prompt},
     ]
 
+
 def get_form16_schema_json() -> str:
-    """Returns Form 16 schema as JSON string for prompt."""
     return """{
   "type": "object",
   "properties": {
@@ -76,10 +56,6 @@ def get_form16_schema_json() -> str:
   "required": ["sal_gross", "sal_perks", "ded_16ia", "confidence"]
 }"""
 
-
-# ============================================
-# NEW PROMPTS FOR EXTENDED AI CAPABILITIES
-# ============================================
 
 SYSTEM_PROMPT_FORM26AS = """You are a specialized Indian Tax Data Extractor. Extract TDS details from Form 26AS Annual Statement into valid JSON matching the schema."""
 
@@ -130,53 +106,42 @@ INSTRUCTIONS:
 
 
 def get_form26as_prompt(raw_text: str, schema_json: str) -> list:
-    """Returns formatted messages for Form 26AS extraction."""
     user_prompt = USER_PROMPT_FORM26AS_TEMPLATE.format(
-        raw_text=raw_text,
-        schema=schema_json
+        raw_text=raw_text, schema=schema_json
     )
     return [
         {"role": "system", "content": SYSTEM_PROMPT_FORM26AS},
-        {"role": "user", "content": user_prompt}
+        {"role": "user", "content": user_prompt},
     ]
 
 
 def get_ais_prompt(ais_json: str, schema_json: str) -> list:
-    """Returns formatted messages for AIS extraction."""
-    user_prompt = USER_PROMPT_AIS_TEMPLATE.format(
-        ais_json=ais_json,
-        schema=schema_json
-    )
+    user_prompt = USER_PROMPT_AIS_TEMPLATE.format(ais_json=ais_json, schema=schema_json)
     return [
         {"role": "system", "content": SYSTEM_PROMPT_AIS},
-        {"role": "user", "content": user_prompt}
+        {"role": "user", "content": user_prompt},
     ]
 
 
 def get_tax_advisory_prompt(vardict_json: str) -> list:
-    """Returns formatted messages for tax advisory."""
-    user_prompt = USER_PROMPT_TAX_ADVISORY_TEMPLATE.format(
-        vardict_json=vardict_json
-    )
+    user_prompt = USER_PROMPT_TAX_ADVISORY_TEMPLATE.format(vardict_json=vardict_json)
     return [
         {"role": "system", "content": SYSTEM_PROMPT_TAX_ADVISORY},
-        {"role": "user", "content": user_prompt}
+        {"role": "user", "content": user_prompt},
     ]
 
 
 def get_classify_prompt(content: str) -> list:
-    """Returns formatted messages for document classification."""
     user_prompt = USER_PROMPT_CLASSIFY_TEMPLATE.format(
-        content=content[:5000]  # Limit content length
+        content=content[:5000]
     )
     return [
         {"role": "system", "content": SYSTEM_PROMPT_CLASSIFY},
-        {"role": "user", "content": user_prompt}
+        {"role": "user", "content": user_prompt},
     ]
 
 
 def get_form26as_schema_json() -> str:
-    """Returns Form 26AS schema as JSON string."""
     return """{
   "type": "object",
   "properties": {
@@ -193,7 +158,6 @@ def get_form26as_schema_json() -> str:
 
 
 def get_ais_schema_json() -> str:
-    """Returns AIS schema as JSON string."""
     return """{
   "type": "object",
   "properties": {
@@ -213,7 +177,6 @@ def get_ais_schema_json() -> str:
 
 
 def get_tax_advisory_schema_json() -> str:
-    """Returns Tax Advisory schema as JSON string."""
     return """{
   "type": "object",
   "properties": {
@@ -227,7 +190,6 @@ def get_tax_advisory_schema_json() -> str:
 
 
 def get_classification_schema_json() -> str:
-    """Returns Document Classification schema as JSON string."""
     return """{
   "type": "object",
   "properties": {

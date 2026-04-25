@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide explains how to integrate the AI-powered data extraction features into the Emerald ITR Pro application. The AI system uses a local Phi-4-mini model running via llama-cpp-python to extract data from Form 16 PDFs and audit tax return data.
+This guide explains how to integrate the AI-powered features into the Emerald ITR Pro application. The AI system uses a local **Phi-4-mini** model running via llama-cpp-python to extract data from Form 16/26AS/AIS PDFs, provide tax advisory, and audit tax return data.
 
 ---
 
@@ -38,10 +38,10 @@ pip install llama-cpp-python>=0.3.1 psutil>=5.9.0
 
 ```
 emerald_itr_pro/
-    data/              # Created automatically
-    settings.json  # AI configuration
-    ai_audit_log.json  # Audit trail
-models/            # Download model here
+    data/
+    settings.json
+    ai_audit_log.json
+models/
     Phi-4-mini-instruct-Q8_0.gguf
 ```
 
@@ -51,12 +51,17 @@ models/            # Download model here
 
 ### 1. Download the Model
 
-Download the Phi-4-mini GGUF model from HuggingFace:
+Download the **Phi-4-mini** GGUF model from HuggingFace and place it in the `models/` directory.
 
-- **Model**: `Phi-4-mini-instruct-Q8_0.gguf` (recommended) or similar variant
-- **Size**: ~4GB
-- **Location**: Place in `models/` directory
-- **Source**: [LM Studio Community Phi-4 on HuggingFace](https://huggingface.co/lmstudio-community/Phi-4-mini-instruct-GGUF)
+**Recommended Model:**
+- **Name**: `Phi-4-mini-instruct-Q8_0.gguf`
+- **Link**: [LM Studio Community Phi-4 on HuggingFace](https://huggingface.co/lmstudio-community/Phi-4-mini-instruct-GGUF)
+
+**Automatic Discovery Logic:**
+- The app first checks the `ai_model_path` in `settings.json`.
+- If missing or invalid, it scans the `models/` folder for any `.gguf` file.
+- It prioritizes files with **"phi"** in the name for best prompt compatibility.
+- If no "phi" model exists, it falls back to the first `.gguf` file it finds.
 
 ### 2. Configure Settings
 
@@ -98,9 +103,9 @@ Service Layer
 
 Core AI Layer
 ├── Prompts (src/services/ai/prompts.py)
-│   └── Form 16 extraction prompts
+│   └── Extraction prompts for Form 16, 26AS, AIS, and Tax Advisory
 ├── Schemas (src/services/ai/schemas.py)
-│   └── JSON validation schemas
+│   └── JSON validation schemas for all AI outputs
 └── PII Sanitization
     └── Masks PAN/Aadhaar before sending to LLM
 ```
@@ -137,28 +142,21 @@ Core AI Layer
 ```python
 from src.gui.components.ai_panel import AIPanel
 
-# In your view class
 class YourView(ctk.CTkFrame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
         
-        # Create AI panel
         self.ai_panel = AIPanel(self, root_window=self.master)
         self.ai_panel.pack(fill="both", expand=True, padx=10, pady=10)
         
-        # Set callback for accept/reject
         self.ai_panel.set_callback(self._handle_ai_decision)
     
     def _handle_ai_decision(self, field: str, value: Any, action: str):
-        """Handle user's decision on AI suggestion."""
         if action == "accept":
-            # Update your form_vars
             if field in self.form_vars:
                 self.form_vars[field].set(value)
-            # Trigger recalculation
             self._recalculate_tax()
         elif action == "reject":
-            # User rejected suggestion - no action needed
             pass
 ```
 
@@ -168,18 +166,14 @@ class YourView(ctk.CTkFrame):
 from src.services.io.import_service import ImportService
 
 def on_pdf_import_clicked(self):
-    """Handle PDF import button click."""
-    # First, extract text from PDF (existing code)
     path = filedialog.askopenfilename(filetypes=[("PDF", "*.pdf")])
     if not path:
         return
     
-    # Extract text using pypdf
     with open(path, "rb") as f:
         reader = pypdf.PdfReader(f)
         text = "\n".join(p.extract_text() for p in reader.pages)
     
-    # Send to AI for extraction
     ImportService.extract_with_ai(
         text=text,
         root_window=self,
@@ -187,11 +181,9 @@ def on_pdf_import_clicked(self):
     )
 
 def _handle_ai_result(self, result: dict):
-    """Handle AI extraction result."""
     if result.get("status") == "success":
         ai_data = result.get("data", {})
         
-        # Add suggestions to AI panel
         self.ai_panel.add_suggestion(
             field_name="Gross Salary",
             current_value=self.form_vars["sal_gross"].get(),
@@ -199,9 +191,6 @@ def _handle_ai_result(self, result: dict):
             confidence=ai_data.get("confidence", 0),
             source_snippet="Form 16 PDF"
         )
-        
-        # Add other fields similarly
-        # ...
     else:
         messagebox.showerror("AI Error", "Failed to extract data with AI")
 ```
@@ -210,7 +199,6 @@ def _handle_ai_result(self, result: dict):
 
 ```python
 def run_background_audit(self):
-    """Run AI audit on current tax return data."""
     vardict = self._get_current_vardict()
     
     ImportService.run_ai_audit(
@@ -220,7 +208,6 @@ def run_background_audit(self):
     )
 
 def _handle_audit_result(self, result: dict):
-    """Handle audit warnings."""
     if result.get("status") == "success":
         warnings = result.get("data", {}).get("warnings", [])
         
@@ -232,6 +219,32 @@ def _handle_audit_result(self, result: dict):
                 )
 ```
 
+### Step 4: Specialized Extraction (Form 26AS, AIS, Advisory)
+
+```python
+ImportService.extract_form26as_with_ai(text, self, self._handle_26as_result)
+
+ImportService.get_tax_advisory(vardict, self, self._handle_advisory_result)
+
+ImportService.classify_document(text, self, self._handle_classification)
+```
+
+---
+
+## AI Features & Capabilities
+
+### 1. Form 16/26AS/AIS Extraction
+Extracts complex nested data (TDS, Salary Breakdowns, Interest) into structured JSON.
+
+### 2. Tax Advisory
+Reviews the current `VarDict` (app state) and provides contextual advice on optimization and compliance.
+
+### 3. Document Classification
+Detects if a piece of text belongs to a Form 16, 26AS, AIS, or TIS.
+
+### 4. Background Auditing
+Silently scans for high-risk data entry errors or statutory mismatches.
+
 ---
 
 ## Code Examples
@@ -242,8 +255,6 @@ def _handle_audit_result(self, result: dict):
 from src.services.io.import_service import ImportService
 
 def extract_form16_data(pdf_text: str):
-    """Extract Form 16 data using AI."""
-    
     results = []
     
     def on_result(result):
@@ -255,8 +266,6 @@ def extract_form16_data(pdf_text: str):
         on_result=on_result
     )
     
-    # Wait for result (in real app, use callback)
-    # This is just for demonstration
     return results[0] if results else None
 ```
 
@@ -266,7 +275,6 @@ def extract_form16_data(pdf_text: str):
 from src.services.ai.ai_manager import get_ai_manager
 
 def check_ai_status():
-    """Check if AI is available and enabled."""
     ai_manager = get_ai_manager()
     
     print(f"AI Enabled: {ai_manager.is_enabled()}")
@@ -281,7 +289,6 @@ from src.services.ai.hardware_utils import sanitize_pii
 
 text = "PAN: ABCDE1234F, Aadhaar: 1234 5678 9012"
 sanitized = sanitize_pii(text)
-# Output: "PAN: XXXXX1234X, Aadhaar: XXXX XXXX 9012"
 ```
 
 ---
@@ -299,10 +306,8 @@ python -m pytest tests/test_ai_services.py -v
 ```python
 from src.services.ai.hardware_utils import sanitize_pii
 
-# Test PAN masking
 assert "XXXXX1234X" in sanitize_pii("ABCDE1234F")
 
-# Test Aadhaar masking
 assert "XXXX XXXX 9012" in sanitize_pii("1234 5678 9012")
 ```
 
@@ -323,9 +328,9 @@ All 22 tests should pass.
 ### Issue: "Model not found"
 
 **Solution:**
-- Ensure the GGUF file is in `models/` directory
-- Check `ai_model_path` in settings.json
-- Verify filename matches (tolerates minor suffix variations)
+- Ensure the **Phi-4-mini** `.gguf` file is in the `models/` directory.
+- The app will automatically discover it even if the filename is slightly different.
+- Check that the `models/` folder itself exists (it should be auto-created on first run).
 
 ### Issue: "AI is disabled"
 

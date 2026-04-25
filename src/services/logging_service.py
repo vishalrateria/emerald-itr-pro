@@ -2,12 +2,23 @@ import logging
 import sys
 from logging.handlers import RotatingFileHandler
 
+
 class FlushHandler(RotatingFileHandler):
     def emit(self, record):
         super().emit(record)
         self.flush()
 
-def setup_logger(n="emerald_itr", f="emerald_itr.log", level=logging.DEBUG):
+
+def setup_logger(n="emerald_itr", f="emerald_itr.log", level=None):
+    if level is None:
+        try:
+            from src.services.settings_service import SettingsManager
+
+            level_str = SettingsManager.get("Engine.log_level", "INFO").upper()
+            level = getattr(logging, level_str, logging.INFO)
+        except Exception:
+            level = logging.INFO
+
     root_logger = logging.getLogger()
     root_logger.setLevel(level)
     root_logger.handlers = []
@@ -29,5 +40,6 @@ def setup_logger(n="emerald_itr", f="emerald_itr.log", level=logging.DEBUG):
     logger = logging.getLogger(n)
     logger.debug("Logging system initialized (Console + File)")
     return logger
+
 
 log = logging.getLogger("emerald_itr")

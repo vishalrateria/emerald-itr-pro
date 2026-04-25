@@ -1,4 +1,9 @@
-from src.gui.styles.constants import SPACING_SM, SPACING_LG, INNER_PADX, BUTTON_HEIGHT_SM
+from src.gui.styles.constants import (
+    SPACING_SM,
+    SPACING_LG,
+    INNER_PADX,
+    BUTTON_HEIGHT_SM,
+)
 import customtkinter as ctk
 from src.gui.styles.theme import Theme
 from src.gui.widgets.common import page_header, make_card
@@ -35,7 +40,12 @@ class WizardSchedule:
             row.grid_columnconfigure(1, minsize=140)
 
             label_widget = ctk.CTkLabel(
-                row, text=lbl, font=Theme.BODY, text_color=Theme.TEXT_DIM, anchor="w", justify="left"
+                row,
+                text=lbl,
+                font=Theme.BODY,
+                text_color=Theme.TEXT_DIM,
+                anchor="w",
+                justify="left",
             )
             label_widget.grid(row=0, column=0, sticky="ew", padx=INNER_PADX)
 
@@ -54,8 +64,10 @@ class WizardSchedule:
         _q_row("5. Do you have any Foreign Assets/Income?", q_vars["has_foreign"])
         _q_row("6. Is your Agricultural Income > ₹5,000?", q_vars["has_agri_gt_5k"])
         _q_row("7. Do you have VDA (Crypto) income?", q_vars["has_vda"])
-        _q_row("8. Do you have taxable Capital Gains (beyond 112A exemption)?",
-               q_vars["has_taxable_cg"])
+        _q_row(
+            "8. Do you have taxable Capital Gains (beyond 112A exemption)?",
+            q_vars["has_taxable_cg"],
+        )
         _q_row("9. Do you own more than 2 House Properties?", q_vars["hp_gt_2"])
 
         def calculate_itr():

@@ -65,12 +65,13 @@ class VerifySchedule:
         card_spacer(pl)
 
         al_card = make_card(
-            f, "SCHEDULE AL — ASSETS & LIABILITIES (MANDATORY if Income > ₹50 Lakh)")
+            f, "SCHEDULE AL — ASSETS & LIABILITIES (MANDATORY if Income > ₹50 Lakh)"
+        )
         info_banner(
             f,
             "📋 STATUTORY DISCLOSURE",
             "Required only if Total Income exceeds ₹50 Lakh. Enter cost of assets as of 31st March 2026.",
-            color=Theme.ACCENT_PRIMARY
+            color=Theme.ACCENT_PRIMARY,
         )
         field_row(al_card, "Immovable Assets (Land/Building) ₹", fv["al_immovable"])
         field_row(al_card, "Movable Assets (Shares/Cash/Gold) ₹", fv["al_movable"])

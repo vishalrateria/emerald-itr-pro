@@ -7,12 +7,14 @@ def _get_dpi_scale() -> float:
         return 1.0
     try:
         from ctypes import windll
+
         hdc = windll.user32.GetDC(0)
         dpi = windll.gdi32.GetDeviceCaps(hdc, 88)
         windll.user32.ReleaseDC(0, hdc)
         return max(1.0, dpi / 96.0)
     except Exception as e:
         import logging
+
         logging.error(f"DPI scale err: {e}")
         return 1.0
 
@@ -38,7 +40,7 @@ class Theme:
     ACCENT_PRIMARY = "#006ADC"
     ACCENT_HOVER = "#005BBF"
     BRAND_BLUE = "#006ADC"
-    
+
     GTI_BLUE = "#339AF0"
     TTI_PURPLE = "#9775FA"
     TAX_AMBER = "#FCC419"
@@ -88,16 +90,21 @@ class Theme:
         def _apply():
             try:
                 from ctypes import windll, byref, sizeof, c_int
+
                 hwnd = windll.user32.GetAncestor(window.winfo_id(), 2)
                 v = c_int(1)
                 windll.dwmapi.DwmSetWindowAttribute(hwnd, 20, byref(v), sizeof(v))
                 backdrop = c_int(4)
-                windll.dwmapi.DwmSetWindowAttribute(hwnd, 38, byref(backdrop), sizeof(backdrop))
+                windll.dwmapi.DwmSetWindowAttribute(
+                    hwnd, 38, byref(backdrop), sizeof(backdrop)
+                )
                 c = c_int(cls.TITLE_BG)
                 windll.dwmapi.DwmSetWindowAttribute(hwnd, 35, byref(c), sizeof(c))
             except Exception as e:
                 import logging
+
                 logging.debug(f"Title bar immersion failed: {e}")
+
         window.after(10, _apply)
 
     @classmethod
@@ -108,14 +115,28 @@ class Theme:
             "border_color": cls.SECTION_BORDER,
             "border_width": 1,
             "corner_radius": cls.RADIUS_SM,
-            "placeholder_text_color": cls.TEXT_MUTED
+            "placeholder_text_color": cls.TEXT_MUTED,
         }
         if variant == "recessed":
-            s.update({"fg_color": cls.BG_RECESSED, "border_color": cls.SECTION_BORDER_LIGHT})
+            s.update(
+                {"fg_color": cls.BG_RECESSED, "border_color": cls.SECTION_BORDER_LIGHT}
+            )
         elif variant == "calc":
-            s.update({"fg_color": cls.CALC_BG, "border_color": cls.CALC_BORDER, "text_color": cls.BRAND_BLUE})
+            s.update(
+                {
+                    "fg_color": cls.CALC_BG,
+                    "border_color": cls.CALC_BORDER,
+                    "text_color": cls.BRAND_BLUE,
+                }
+            )
         elif variant == "total":
-            s.update({"fg_color": cls.TOTAL_BG, "border_color": cls.TOTAL_BORDER, "text_color": cls.WARNING_GOLD})
+            s.update(
+                {
+                    "fg_color": cls.TOTAL_BG,
+                    "border_color": cls.TOTAL_BORDER,
+                    "text_color": cls.WARNING_GOLD,
+                }
+            )
         return s
 
     @classmethod
@@ -129,7 +150,7 @@ class Theme:
             "dropdown_fg_color": cls.BG_SECONDARY,
             "dropdown_hover_color": cls.BG_INPUT,
             "dropdown_text_color": cls.TEXT_PRIMARY,
-            "corner_radius": cls.RADIUS_SM
+            "corner_radius": cls.RADIUS_SM,
         }
 
     @classmethod
@@ -167,6 +188,12 @@ class Theme:
                 "fg_color": "transparent",
                 "hover_color": cls.BG_HOVER,
                 "text_color": cls.TEXT_DIM,
+                "corner_radius": cls.RADIUS_SM,
+            },
+            "accent": {
+                "fg_color": cls.TTI_PURPLE,
+                "hover_color": "#7C3AED",
+                "text_color": "#FFFFFF",
                 "corner_radius": cls.RADIUS_SM,
             },
         }

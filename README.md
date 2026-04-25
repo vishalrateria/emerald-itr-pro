@@ -50,7 +50,7 @@ Emerald now features a local AI assistant that acts as your personal tax consult
 - **Smart Document Extraction**: Upload your Form 16, 26AS, or AIS, and let the AI extract complex data points automatically.
 - **Tax Advisory**: The AI reviews your tax return and provides proactive suggestions to avoid common errors or optimize disclosures.
 - **Document Classification**: Simply drop a file, and the AI automatically detects its type.
-- **100% Local & Private**: All AI processing happens on your machine using the **Phi-4-mini** model. Your financial data never leaves your computer.
+- **100% Local & Private**: All AI processing happens on your machine using the **Phi-4-mini** model. While the system is flexible enough to load any `.gguf` model, it is specifically tuned for Phi-4 performance and accuracy.
 - **Hardware Adaptive**: Automatically scales performance (Eco, Standard, and Pro modes) based on your system RAM.
 
 ## 💎 Production Hardening (v1.0 Update)
@@ -59,6 +59,7 @@ The codebase has undergone a comprehensive production-grade hardening process fo
 - **Tax Engine Verification**: All rates, slabs, and thresholds verified against authoritative sources.
 - **Architectural Hardening**: Decoupled core tax logic from the UI using the `StateRegistry` for absolute visual consistency.
 - **Navigation & UX**: Finalized the dynamic sidebar stepper and real-time validation feedback.
+- **Data Management**: Integrated a rolling backup system and automated autosave to prevent data loss.
 
 ## 📅 New Tax Regime Compliance (AY 2026-27)
 
@@ -78,12 +79,15 @@ Emerald supports a wide range of filing scenarios:
 
 ## 🛡️ Privacy & Offline Architecture
 - **Zero Cloud**: 100% offline. No accounts. No tracking. No telemetry.
+- **Rolling Backups**: Automatic backups of your client data to `backups/` folder.
+- **Secure Persistence**: JSON-based storage with deep sanitization.
 
 ## 🛠 Tech Stack & Architecture
 - **CustomTkinter**: Modern, high-DPI UI framework.
 - **llama-cpp-python**: Local LLM inference engine.
-- **TaxService**: ~300 lines of hardened tax calculation logic.
+- **TaxEngine**: Hardened engine in `src/core/engine.py`.
 - **DeductionService**: Real-time rule checking against New Tax Regime constraints.
+- **ITR Mapper**: Sophisticated JSON mapping to official ITR schemas.
 
 ## 📋 Installation
 
@@ -95,8 +99,12 @@ Emerald supports a wide range of filing scenarios:
    ```bash
    pip install -r requirements.txt
    ```
-3. **(Optional) AI Setup**: Download Phi-4-mini GGUF to the `models/` folder and enable AI in Settings.
+3. **(Optional) AI Setup**: Download the **Phi-4-mini** GGUF model to the `models/` folder. The application will automatically detect it and enable advanced tax extraction features.
 4. **Launch**: `python main.py` or double-click `run_app.bat`.
+
+## 📚 Developer Resources
+- [AI Integration Guide](docs/AI_INTEGRATION_GUIDE.md): Technical details on the local LLM implementation.
+- [ITR Validation Spec](docs/ITR_Validation_Specification.txt): Statutory rule engine and JSON schema specifications.
 
 ---
 *Built with ❤️ for the Indian Tax Community.*

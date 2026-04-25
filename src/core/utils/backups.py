@@ -5,6 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def perform_rolling_backup(src, dst_dir, max_backups=5):
     if not os.path.exists(src):
         return
@@ -31,6 +32,7 @@ def perform_rolling_backup(src, dst_dir, max_backups=5):
         logger.error(f"Backup failed: {e}")
         return None
 
+
 def list_backups(dst_dir):
     if not os.path.exists(dst_dir):
         return []
@@ -38,12 +40,11 @@ def list_backups(dst_dir):
     for d in os.listdir(dst_dir):
         if d.startswith("backup_"):
             full_path = os.path.join(dst_dir, d)
-            backups.append({
-                'path': full_path,
-                'name': d,
-                'timestamp': os.path.getctime(full_path)
-            })
-    return sorted(backups, key=lambda x: x['timestamp'], reverse=True)
+            backups.append(
+                {"path": full_path, "name": d, "timestamp": os.path.getctime(full_path)}
+            )
+    return sorted(backups, key=lambda x: x["timestamp"], reverse=True)
+
 
 def restore_backup(backup_path, dst):
     try:

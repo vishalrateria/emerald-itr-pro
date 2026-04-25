@@ -6,8 +6,10 @@ from tkinter import filedialog, messagebox
 from src.services.logging_service import log as logger
 from src.services.io.persistence import safe_save_json, safe_load_json
 
+
 class ProjectService:
     progress_callback = None
+
     @staticmethod
     def _validate_path(path: str) -> bool:
         return os.path.isfile(path) and os.path.getsize(path) < 10 * 1024 * 1024
@@ -15,7 +17,8 @@ class ProjectService:
     @staticmethod
     def backup_data(form_vars: dict) -> None:
         folder = filedialog.askdirectory(title="Select Backup Folder")
-        if not folder: return
+        if not folder:
+            return
         try:
             ts = datetime.now().strftime("%Y%m%d_%H%M%S")
             path = os.path.join(folder, f"emerald_backup_{ts}.json")
@@ -28,7 +31,8 @@ class ProjectService:
     @staticmethod
     def restore_data(form_vars: dict) -> None:
         path = filedialog.askopenfilename(filetypes=[("JSON", "*.json")])
-        if not path: return
+        if not path:
+            return
         try:
             data = safe_load_json(path)
             if data:

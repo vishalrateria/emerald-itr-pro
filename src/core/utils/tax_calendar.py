@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import List, Dict
 
+
 class TaxCalendar:
     def __init__(self, assessment_year: str = "2026-27"):
         self.assessment_year = assessment_year
@@ -13,26 +14,26 @@ class TaxCalendar:
                 "name": "Advance Tax - Installment 1",
                 "due_date": datetime(2025, 6, 15),
                 "percentage": 15,
-                "description": "15% of advance tax by June 15"
+                "description": "15% of advance tax by June 15",
             },
             {
                 "name": "Advance Tax - Installment 2",
                 "due_date": datetime(2025, 9, 15),
                 "percentage": 45,
-                "description": "45% of advance tax by September 15"
+                "description": "45% of advance tax by September 15",
             },
             {
                 "name": "Advance Tax - Installment 3",
                 "due_date": datetime(2025, 12, 15),
                 "percentage": 75,
-                "description": "75% of advance tax by December 15"
+                "description": "75% of advance tax by December 15",
             },
             {
                 "name": "Advance Tax - Final Installment",
                 "due_date": datetime(2026, 3, 15),
                 "percentage": 100,
-                "description": "100% of advance tax by March 15"
-            }
+                "description": "100% of advance tax by March 15",
+            },
         ]
 
     def get_interest_deadlines(self) -> List[Dict]:
@@ -40,18 +41,18 @@ class TaxCalendar:
             {
                 "name": "Section 234A - Late Filing",
                 "due_date": datetime(2026, 7, 31),
-                "description": "Interest for not filing return by due date"
+                "description": "Interest for not filing return by due date",
             },
             {
                 "name": "Section 234B - Default in Advance Tax",
                 "due_date": datetime(2026, 7, 31),
-                "description": "Interest for shortfall in advance tax payment"
+                "description": "Interest for shortfall in advance tax payment",
             },
             {
                 "name": "Section 234C - Default in Installments",
                 "due_date": datetime(2026, 3, 15),
-                "description": "Interest for deferment of advance tax installments"
-            }
+                "description": "Interest for deferment of advance tax installments",
+            },
         ]
 
     def get_filing_deadlines(self) -> List[Dict]:
@@ -59,18 +60,18 @@ class TaxCalendar:
             {
                 "name": "ITR Filing Due Date (Non-Audit)",
                 "due_date": datetime(2026, 7, 31),
-                "description": "Last date to file ITR for non-audit cases"
+                "description": "Last date to file ITR for non-audit cases",
             },
             {
                 "name": "ITR Filing Due Date (Audit)",
                 "due_date": datetime(2026, 10, 31),
-                "description": "Last date to file ITR for audit cases"
+                "description": "Last date to file ITR for audit cases",
             },
             {
                 "name": "Belated Filing",
                 "due_date": datetime(2026, 12, 31),
-                "description": "Last date for belated ITR filing"
-            }
+                "description": "Last date for belated ITR filing",
+            },
         ]
 
     def get_upcoming_deadlines(self, days_ahead: int = 30) -> List[Dict]:

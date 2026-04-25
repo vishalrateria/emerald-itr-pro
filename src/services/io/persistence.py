@@ -4,13 +4,16 @@ import os
 from pathlib import Path
 from src.services.logging_service import log as logger
 
+
 def _deep_sanitize(obj: Any, key_context: str = "") -> Any:
     if isinstance(obj, dict):
         return {k: _deep_sanitize(v, k) for k, v in obj.items()}
     elif isinstance(obj, list):
         return [_deep_sanitize(item, key_context) for item in obj]
     elif isinstance(obj, str):
-        cleaned = "".join(c for c in obj if c.isascii()).strip()
+        cleaned = "".join(
+            c for c in obj if c.isprintable() or c in ("\n", "\r", "\t")
+        ).strip()
         upper_keys = ["PAN", "TAN", "GSTIN", "IFSC", "BSR", "ISIN"]
         if any(x in key_context.upper() for x in upper_keys) or key_context in [
             "TransactionId",
@@ -20,6 +23,7 @@ def _deep_sanitize(obj: Any, key_context: str = "") -> Any:
             cleaned = cleaned.upper()
         return cleaned
     return obj
+
 
 def safe_load_json(path: Union[str, Path]) -> Union[Dict, List, None]:
     ph = Path(path)
@@ -32,6 +36,7 @@ def safe_load_json(path: Union[str, Path]) -> Union[Dict, List, None]:
     except Exception as e:
         logger.error(f"❌ Failed to load {ph}. Error: {e}")
         return None
+
 
 def safe_save_json(path: Union[str, Path], data: Union[Dict, List]) -> bool:
     ph = Path(path)

@@ -20,7 +20,11 @@ class Presumptive44ADSchedule:
             "SCHEDULE 44AD — PRESUMPTIVE BUSINESS INCOME",
             "Presumptive income @ 8% of turnover (6% for digital receipts)",
         )
-        from src.config import PRESUMPTIVE_44AD_LIMIT_BASE, PRESUMPTIVE_44AD_LIMIT_ENHANCED
+        from src.config import (
+            PRESUMPTIVE_44AD_LIMIT_BASE,
+            PRESUMPTIVE_44AD_LIMIT_ENHANCED,
+        )
+
         info_banner(
             f,
             "ℹ  TURNOVER LIMIT",
@@ -30,6 +34,7 @@ class Presumptive44ADSchedule:
             color=Theme.ACCENT_PRIMARY,
         )
         from src.gui.widgets.common import combo_field_row, card_spacer
+
         limit_card = make_card(f, "LIMIT ASSESSMENT")
         combo_field_row(
             limit_card,

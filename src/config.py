@@ -54,24 +54,26 @@ SLAB_RATE_25_THRESHOLD = 2400000
 ITR1_GTI_LIMIT = 5000000
 ITR1_HP_PROPERTY_LIMIT = 2
 
-MAX_BUSINESS_ENTITIES = 10
-MAX_HOUSE_PROPERTIES = 5
-MAX_ENTRIES_TDS = 10
-MAX_ENTRIES_TCS = 10
-MAX_ENTRIES_VDA = 10
-MAX_ENTRIES_AE = 10
-MAX_ENTRIES_FO = 10
-MAX_ENTRIES_CG = 10
-MAX_ENTRIES_BANK = 5
-MAX_ENTRIES_G = 5
-MAX_ENTRIES_HP = 5
-MAX_ENTRIES_TAX_PAID = 10
-MAX_CG_QUARTERS = 5
-MAX_ENTRIES_44AD = 10
-MAX_ENTRIES_44ADA = 10
+_DYNAMIC_KEYS = {
+    "MAX_BUSINESS_ENTITIES": ("ITR_Limits.ITR3.max_business_entities", 10),
+    "MAX_HOUSE_PROPERTIES": ("ITR_Limits.ITR2.max_house_properties", 5),
+    "MAX_ENTRIES_TDS": ("ITR_Limits.Common.max_entries_tds", 10),
+    "MAX_ENTRIES_TCS": ("ITR_Limits.Common.max_entries_tcs", 10),
+    "MAX_ENTRIES_VDA": ("ITR_Limits.ITR2.max_entries_vda", 10),
+    "MAX_ENTRIES_AE": ("ITR_Limits.ITR3.max_entries_ae", 10),
+    "MAX_ENTRIES_FO": ("ITR_Limits.ITR2.max_entries_fo", 10),
+    "MAX_ENTRIES_CG": ("ITR_Limits.ITR2.max_entries_cg", 10),
+    "MAX_ENTRIES_BANK": ("ITR_Limits.Common.max_entries_bank", 5),
+    "MAX_ENTRIES_G": ("ITR_Limits.Common.max_entries_g", 5),
+    "MAX_ENTRIES_HP": ("ITR_Limits.ITR2.max_entries_hp", 5),
+    "MAX_ENTRIES_TAX_PAID": ("ITR_Limits.Common.max_entries_tax_paid", 10),
+    "MAX_CG_QUARTERS": ("ITR_Limits.ITR2.max_cg_quarters", 5),
+    "MAX_ENTRIES_44AD": ("ITR_Limits.ITR4.max_entries_44ad", 10),
+    "MAX_ENTRIES_44ADA": ("ITR_Limits.ITR4.max_entries_44ada", 10),
+    "AUTOSAVE_INTERVAL": ("Data.autosave_interval_ms", 300000),
+    "DEBOUNCE_INTERVAL": ("Engine.debounce_interval_ms", 300),
+}
 
-AUTOSAVE_INTERVAL = 300000
-DEBOUNCE_INTERVAL = 300
 PRESUMPTIVE_44AD_LIMIT_BASE = 20000000
 PRESUMPTIVE_44AD_LIMIT_ENHANCED = 30000000
 
@@ -80,3 +82,12 @@ DEFAULT_DEBOUNCE_INTERVAL = 300
 DEFAULT_AUTOSAVE_INTERVAL = 300000
 AUTOSAVE_DEBOUNCE_INTERVAL = 5000
 CONNECTIVITY_CHECK_INTERVAL = 30000
+
+
+def __getattr__(name):
+    if name in _DYNAMIC_KEYS:
+        key, default = _DYNAMIC_KEYS[name]
+        from src.services.settings_service import SettingsManager
+
+        return SettingsManager.get(key, default)
+    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")

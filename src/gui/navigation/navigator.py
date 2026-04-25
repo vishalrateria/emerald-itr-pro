@@ -21,10 +21,16 @@ class NavigatorMixin:
         self.update_wizard_steps()
         for i, (btn, indicator, row) in self.step_buttons.items():
             if i == idx:
-                btn.configure(fg_color=Theme.BG_INPUT, text_color=Theme.ACCENT_PRIMARY, font=Theme.BODY_BOLD)
+                btn.configure(
+                    fg_color=Theme.BG_INPUT,
+                    text_color=Theme.ACCENT_PRIMARY,
+                    font=Theme.BODY_BOLD,
+                )
                 indicator.configure(fg_color=Theme.ACCENT_PRIMARY)
             else:
-                btn.configure(fg_color="transparent", text_color=Theme.TEXT_DIM, font=Theme.BODY)
+                btn.configure(
+                    fg_color="transparent", text_color=Theme.TEXT_DIM, font=Theme.BODY
+                )
                 indicator.configure(fg_color="transparent")
         for f in self.frames.values():
             try:
@@ -49,7 +55,9 @@ class NavigatorMixin:
 
     def next_step(self):
         idx = self.current_step_idx + 1
-        while idx < len(self.steps) and not self.step_visibility.get(self.steps[idx]["id"], True):
+        while idx < len(self.steps) and not self.step_visibility.get(
+            self.steps[idx]["id"], True
+        ):
             idx += 1
         if idx < len(self.steps):
             self.go_to_step(idx)
@@ -62,23 +70,35 @@ class NavigatorMixin:
             self.go_to_step(idx)
 
     def update_wizard_steps(self):
-        config = self.profile_configurator.get_profile_config() if self.profile_configurator else {}
+        config = (
+            self.profile_configurator.get_profile_config()
+            if self.profile_configurator
+            else {}
+        )
         self.step_visibility = {
-            "setup": True, "personal": True,
+            "setup": True,
+            "personal": True,
             "income_salary": config.get("has_salary", True),
             "income_hp": config.get("has_house_property", True),
             "income_bp": config.get("has_business", True),
             "income_cg": config.get("has_capital_gains", True),
             "income_os": config.get("has_other_sources", True),
             "foreign_assets": config.get("has_foreign_assets", False),
-            "deductions": True, "taxes": True, "review": True, "verify": True, "tools": True,
+            "deductions": True,
+            "taxes": True,
+            "review": True,
+            "verify": True,
+            "tools": True,
         }
         visible_idx = 1
         for idx, step in enumerate(self.steps):
             if idx in self.step_buttons:
                 btn, indicator, row = self.step_buttons[idx]
                 if self.step_visibility.get(step["id"], True):
-                    is_visited = hasattr(self, "visited_steps") and step["id"] in self.visited_steps
+                    is_visited = (
+                        hasattr(self, "visited_steps")
+                        and step["id"] in self.visited_steps
+                    )
                     status_prefix = "✓ " if is_visited else f"{visible_idx}. "
                     btn.configure(text=status_prefix + step["title"])
                     row.pack(fill="x", side="top", pady=1)

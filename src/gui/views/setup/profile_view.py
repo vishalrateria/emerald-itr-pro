@@ -63,7 +63,9 @@ class ProfileConfigurator:
         },
     }
 
-    def __init__(self, parent, on_profile_change, initial_itr="ITR-4", register_trace=None):
+    def __init__(
+        self, parent, on_profile_change, initial_itr="ITR-4", register_trace=None
+    ):
         self.parent = parent
         self.on_profile_change = on_profile_change
         self.register_trace = register_trace
@@ -138,6 +140,7 @@ class ProfileConfigurator:
 
         except Exception as e:
             from src.services.logging_service import log as logger
+
             logger.error(f"Constraint application failed: {e}")
         finally:
             self._applying_constraints = False
@@ -159,10 +162,14 @@ class ProfileConfigurator:
         self._trace_tokens.clear()
 
     @staticmethod
-    def create_frame(parent, on_profile_change, initial_itr="ITR-4", register_trace=None):
+    def create_frame(
+        parent, on_profile_change, initial_itr="ITR-4", register_trace=None
+    ):
         cf = ProfileConfigurator(parent, on_profile_change, initial_itr, register_trace)
         f = ctk.CTkFrame(parent, fg_color="transparent")
-        page_header(f, "PROFILE CONFIGURATOR", "Select ITR type and applicable income sources.")
+        page_header(
+            f, "PROFILE CONFIGURATOR", "Select ITR type and applicable income sources."
+        )
         ifr = make_card(f, "QUICK SETUP PRESETS")
 
         def apply_preset(p):
@@ -221,15 +228,23 @@ class ProfileConfigurator:
             font=Theme.BODY,
             **Theme.get_combo_style(),
         ).pack(pady=SPACING_XS, padx=INNER_PADX, fill="x")
-        ctk.CTkFrame(ifr, height=DIVIDER_HEIGHT, fg_color=Theme.SECTION_BORDER).pack(fill="x", padx=INNER_PADX, pady=SPACING_SM)
-        ctk.CTkLabel(ifr, text="ITR TYPE", font=Theme.H3, text_color=Theme.ACCENT_PRIMARY, anchor="w").pack(pady=(0, SPACING_XS), padx=INNER_PADX, anchor="w")
+        ctk.CTkFrame(ifr, height=DIVIDER_HEIGHT, fg_color=Theme.SECTION_BORDER).pack(
+            fill="x", padx=INNER_PADX, pady=SPACING_SM
+        )
+        ctk.CTkLabel(
+            ifr,
+            text="ITR TYPE",
+            font=Theme.H3,
+            text_color=Theme.ACCENT_PRIMARY,
+            anchor="w",
+        ).pack(pady=(0, SPACING_XS), padx=INNER_PADX, anchor="w")
         il = ctk.CTkLabel(
             ifr,
             text="",
             font=Theme.BODY,
             text_color=Theme.TEXT_DIM,
             wraplength=600,
-            anchor="w"
+            anchor="w",
         )
         il.pack(pady=SPACING_XS, padx=INNER_PADX, anchor="w")
         ctk.CTkComboBox(
@@ -338,12 +353,20 @@ class ProfileConfigurator:
                 btf.pack_forget()
 
         if cf.register_trace:
-            for var in [cf.profile_config["has_capital_gains"], cf.profile_config["has_business"], cf.profile_config["itr_type"]]:
+            for var in [
+                cf.profile_config["has_capital_gains"],
+                cf.profile_config["has_business"],
+                cf.profile_config["itr_type"],
+            ]:
                 token = cf.register_trace(var, "write", uv)
                 if token:
                     cf._trace_tokens.append((var, "write", token))
         else:
-            for var in [cf.profile_config["has_capital_gains"], cf.profile_config["has_business"], cf.profile_config["itr_type"]]:
+            for var in [
+                cf.profile_config["has_capital_gains"],
+                cf.profile_config["has_business"],
+                cf.profile_config["itr_type"],
+            ]:
                 token = var.trace_add("write", uv)
                 cf._trace_tokens.append((var, "write", token))
         uv()

@@ -3,8 +3,13 @@ from typing import Any, Dict
 import customtkinter as ctk
 from src.config import STD_DEDUCTION_NEW_REGIME
 from src.gui.controllers.initializers import (
-    init_personal_vars, init_income_vars, init_tax_deduction_vars,
-    init_business_vars, init_schedule_vars, init_bank_vars, init_disclosure_vars
+    init_personal_vars,
+    init_income_vars,
+    init_tax_deduction_vars,
+    init_business_vars,
+    init_schedule_vars,
+    init_bank_vars,
+    init_disclosure_vars,
 )
 
 
@@ -22,6 +27,7 @@ class StateRegistry:
             return v
         except Exception as e:
             import logging
+
             logging.warning(f"Failed to trace variable: {e}")
             return ctk.StringVar(value=val)
 
